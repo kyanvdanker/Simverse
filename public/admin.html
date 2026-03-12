@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simverse — Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080e;--p1:#0b0d18;--p2:#0f1220;
+  --b1:#1a2138;--b2:#243060;--b3:#3a4a7e;
+  --cy:#22d3ee;--c2:#06b6d4;--am:#f59e0b;
+  --gn:#22c55e;--rd:#ef4444;--pu:#8b5cf6;
+  --tx:#94a3b8;--t2:#64748b;--tb:#e2e8f0;
+  --fm:'JetBrains Mono',monospace;
+  --fd:'Bebas Neue',sans-serif;
+  --fu:'DM Sans',sans-serif;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:var(--fu)}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--b2)}
+
+/* ── LAYOUT ── */
+#wrap{display:flex;flex-direction:column;height:100vh}
+#topbar{
+  height:48px;background:var(--p1);border-bottom:1px solid var(--b1);
+  display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;
+}
+.tb-logo{font-family:var(--fd);font-size:20px;letter-spacing:3px;color:var(--cy)}
+.tb-logo em{color:var(--am);font-style:normal}
+.tb-sep{width:1px;height:20px;background:var(--b2)}
+.tb-title{font-size:11px;font-weight:600;letter-spacing:2px;color:var(--t2);text-transform:uppercase;font-family:var(--fm)}
+#refreshBtn{
+  margin-left:auto;padding:5px 12px;border-radius:3px;
+  border:1px solid var(--b2);background:none;color:var(--tx);
+  font-family:var(--fm);font-size:9px;letter-spacing:1px;cursor:pointer;
+  transition:all .15s;
+}
+#refreshBtn:hover{border-color:var(--cy);color:var(--cy)}
+.pip{width:6px;height:6px;border-radius:50%;background:var(--gn);box-shadow:0 0 5px var(--gn);animation:pp 2s infinite}
+@keyframes pp{0%,100%{opacity:1}50%{opacity:.3}}
+
+#body{display:flex;flex:1;min-height:0}
+
+/* ── LEFT SIDEBAR ── */
+#sidebar{
+  width:260px;min-width:260px;background:var(--p1);border-right:1px solid var(--b1);
+  display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;
+}
+.sblk{padding:12px;border-bottom:1px solid var(--b1)}
+.slabel{font-size:7px;font-weight:700;letter-spacing:2.5px;color:var(--t2);text-transform:uppercase;font-family:var(--fm);margin-bottom:8px}
+
+/* big stat */
+.bstat{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}
+.bstat-val{font-family:var(--fd);font-size:44px;color:var(--cy);line-height:1;letter-spacing:2px}
+.bstat-key{font-size:9px;color:var(--t2);font-family:var(--fm);letter-spacing:1px}
+
+/* mini stats */
+.mstats{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mstat{background:var(--p2);border:1px solid var(--b1);border-radius:3px;padding:8px 10px}
+.mstat-val{font-family:var(--fd);font-size:22px;color:var(--am);line-height:1}
+.mstat-key{font-size:8px;color:var(--t2);font-family:var(--fm);letter-spacing:.5px}
+
+/* country list */
+.clist{display:flex;flex-direction:column;gap:3px}
+.crow{display:flex;align-items:center;gap:6px;font-size:9px;font-family:var(--fm)}
+.cflag{font-size:13px;width:18px;flex-shrink:0}
+.cname{flex:1;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cbar-wrap{width:50px;height:4px;background:var(--b2);border-radius:2px;overflow:hidden;flex-shrink:0}
+.cbar{height:4px;background:var(--cy);border-radius:2px;transition:width .4s}
+.ccount{color:var(--cy);min-width:26px;text-align:right}
+
+/* recent visits */
+.vlist{display:flex;flex-direction:column;gap:3px}
+.vrow{background:var(--p2);border:1px solid var(--b1);border-radius:2px;padding:5px 7px}
+.vrow-top{display:flex;gap:5px;font-size:8px;font-family:var(--fm)}
+.vflag{font-size:11px}
+.vcity{color:var(--cy);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vtime{color:var(--t2);flex-shrink:0}
+.vrow-bot{font-size:7px;color:var(--t2);font-family:var(--fm);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── MAIN (map + chart) ── */
+#main-right{flex:1;display:flex;flex-direction:column;min-width:0}
+#mapWrap{flex:1;min-height:0;position:relative}
+#map{width:100%;height:100%}
+
+/* ── CHART BAR ── */
+#chartBar{
+  height:160px;background:var(--p1);border-top:1px solid var(--b1);
+  display:flex;flex-direction:column;flex-shrink:0;
+}
+#chartTabs{display:flex;align-items:center;height:28px;padding:0 12px;border-bottom:1px solid var(--b1);gap:0}
+.ctab{
+  padding:0 12px;height:28px;display:flex;align-items:center;
+  font-size:8px;font-weight:700;font-family:var(--fm);letter-spacing:1.5px;
+  color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;
+  text-transform:uppercase;transition:all .15s;
+}
+.ctab.act{color:var(--cy);border-bottom-color:var(--cy)}
+.ctab:hover:not(.act){color:var(--tb)}
+#chartWrap{flex:1;padding:8px 14px 10px}
+canvas#chartCv{width:100%;height:100%;display:block}
+
+/* Leaflet overrides */
+.leaflet-container{background:#06080e!important}
+.leaflet-tile{filter:brightness(.6) saturate(.4) hue-rotate(180deg)}
+.leaflet-control-zoom{border-color:var(--b2)!important}
+.leaflet-control-zoom a{background:var(--p2)!important;color:var(--tb)!important;border-color:var(--b1)!important}
+.leaflet-control-attribution{background:rgba(6,8,14,.7)!important;color:var(--t2)!important;font-size:8px!important}
+.leaflet-control-attribution a{color:var(--t2)!important}
+
+/* Key prompt */
+#keyPrompt{
+  position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.88);
+  display:flex;align-items:center;justify-content:center;
+}
+#keyBox{
+  background:var(--p1);border:1px solid var(--b2);border-radius:6px;
+  padding:28px 32px;width:360px;max-width:94vw;
+}
+.kh{font-family:var(--fd);font-size:26px;letter-spacing:3px;color:var(--tb);margin-bottom:4px}
+.ks{font-size:11px;color:var(--t2);font-family:var(--fm);margin-bottom:18px;line-height:1.6}
+#keyInput{
+  width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--b2);
+  border-radius:3px;color:var(--tb);font-family:var(--fm);font-size:12px;outline:none;
+  margin-bottom:12px;
+}
+#keyInput:focus{border-color:var(--cy)}
+#keySubmit{
+  width:100%;padding:10px;background:var(--cy);color:#000;border:none;
+  border-radius:3px;font-family:var(--fm);font-size:11px;font-weight:700;
+  letter-spacing:1px;cursor:pointer;transition:background .15s;
+}
+#keySubmit:hover{background:#fff}
+#keyErr{font-size:9px;color:var(--rd);font-family:var(--fm);margin-top:8px;display:none}
+
+/* ── CONTACTS ── */
+#contactsPanel{
+  position:absolute;inset:0;background:var(--p1);z-index:10;
+  display:none;flex-direction:column;overflow:hidden;
+}
+#contactsPanel.show{display:flex}
+.cp-header{
+  height:36px;display:flex;align-items:center;padding:0 14px;
+  border-bottom:1px solid var(--b1);gap:10px;flex-shrink:0;
+}
+.cp-title{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--cy);font-family:var(--fm);text-transform:uppercase;flex:1}
+.cp-close{padding:4px 10px;border:1px solid var(--b2);background:none;color:var(--t2);font-family:var(--fm);font-size:9px;cursor:pointer;border-radius:2px;transition:all .15s}
+.cp-close:hover{border-color:var(--rd);color:var(--rd)}
+.cp-list{flex:1;overflow-y:auto;padding:8px}
+.ccard{
+  background:var(--p2);border:1px solid var(--b1);border-radius:4px;
+  padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s;
+}
+.ccard:hover{border-color:var(--b2)}
+.ccard.unread{border-left:3px solid var(--cy)}
+.cc-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.cc-name{font-size:12px;font-weight:600;color:var(--tb);flex:1}
+.cc-time{font-size:9px;color:var(--t2);font-family:var(--fm)}
+.cc-email{font-size:10px;color:var(--cy);font-family:var(--fm);margin-bottom:6px}
+.cc-msg{font-size:11px;color:var(--tx);line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cc-reply{
+  margin-top:10px;padding:5px 12px;font-size:9px;font-family:var(--fm);
+  letter-spacing:1px;border:1px solid var(--b2);background:none;color:var(--tx);
+  border-radius:2px;cursor:pointer;transition:all .15s;text-decoration:none;display:inline-block;
+}
+.cc-reply:hover{border-color:var(--cy);color:var(--cy)}
+.cp-empty{
+  display:flex;align-items:center;justify-content:center;flex:1;
+  font-family:var(--fm);font-size:10px;color:var(--t2);letter-spacing:1px;
+}
+.unread-badge{
+  display:inline-block;min-width:16px;height:16px;border-radius:8px;
+  background:var(--cy);color:#000;font-size:8px;font-weight:700;
+  text-align:center;line-height:16px;padding:0 4px;font-family:var(--fm);
+  margin-left:4px;
+}
+</style>
+</head>
+<body>
+
+<!-- Key prompt -->
+<div id="keyPrompt">
+  <div id="keyBox">
+    <div class="kh">ADMIN ACCESS</div>
+    <div class="ks">Enter your API key to view analytics.<br>Find it in the server console on startup.</div>
+    <input type="password" id="keyInput" placeholder="API key…" autocomplete="off">
+    <button id="keySubmit" onclick="doAuth()">UNLOCK DASHBOARD →</button>
+    <div id="keyErr">Invalid API key.</div>
+  </div>
+</div>
+
+<div id="wrap" style="display:none">
+  <!-- TOPBAR -->
+  <div id="topbar">
+    <div class="tb-logo">SIM<em>VERSE</em></div>
+    <div class="tb-sep"></div>
+    <div class="tb-title">Analytics Dashboard</div>
+    <div class="pip"></div>
+    <button id="refreshBtn" onclick="loadData()">↺ REFRESH</button>
+    <button id="inboxBtn" onclick="openContacts()" style="padding:5px 12px;border-radius:3px;border:1px solid var(--b2);background:none;color:var(--tx);font-family:var(--fm);font-size:9px;letter-spacing:1px;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--cy)';this.style.color='var(--cy)'" onmouseout="this.style.borderColor='var(--b2)';this.style.color='var(--tx)'">✉ INBOX <span id="unreadBadge" class="unread-badge" style="display:none">0</span></button>
+  </div>
+
+  <div id="body">
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+      <div class="sblk">
+        <div class="slabel">Total Visits</div>
+        <div class="bstat">
+          <div class="bstat-val" id="totalVal">—</div>
+          <div class="bstat-key">all time page views</div>
+        </div>
+        <div class="mstats">
+          <div class="mstat">
+            <div class="mstat-val" id="todayVal">—</div>
+            <div class="mstat-key">today</div>
+          </div>
+          <div class="mstat">
+            <div class="mstat-val" id="countriesVal">—</div>
+            <div class="mstat-key">countries</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sblk" style="flex:1">
+        <div class="slabel">Top Countries</div>
+        <div class="clist" id="countryList">
+          <div style="font-size:9px;color:var(--t2);font-family:var(--fm)">Loading…</div>
+        </div>
+      </div>
+
+      <div class="sblk" style="max-height:260px;overflow-y:auto">
+        <div class="slabel">Live Feed</div>
+        <div class="vlist" id="visitList">
+          <div style="font-size:9px;color:var(--t2);font-family:var(--fm)">Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAP + CHART -->
+    <div id="main-right">
+      <div id="mapWrap" style="position:relative">
+        <div id="map"></div>
+        <!-- Contacts overlay -->
+        <div id="contactsPanel">
+          <div class="cp-header">
+            <span class="cp-title">✉ Contact Inbox</span>
+            <button class="cp-close" onclick="closeContacts()">✕ CLOSE</button>
+          </div>
+          <div class="cp-list" id="cpList"><div class="cp-empty">Loading…</div></div>
+        </div>
+      </div>
+
+      <div id="chartBar">
+        <div id="chartTabs">
+          <div class="ctab act" onclick="setChartTab(this,'daily')">Daily Visits</div>
+          <div class="ctab" onclick="setChartTab(this,'pages')">Top Pages</div>
+        </div>
+        <div id="chartWrap">
+          <canvas id="chartCv"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+// ── CONTACTS ──────────────────────────────────────────
+async function openContacts() {
+  document.getElementById('contactsPanel').classList.add('show');
+  await loadContacts();
+}
+function closeContacts() {
+  document.getElementById('contactsPanel').classList.remove('show');
+}
+
+async function loadContacts() {
+  try {
+    const res = await fetch('/api/contacts', { headers: { 'x-api-key': API_KEY } });
+    const list = await res.json();
+    const unread = list.filter(c => !c.read).length;
+
+    // Update badge
+    const badge = document.getElementById('unreadBadge');
+    badge.style.display = unread > 0 ? 'inline-block' : 'none';
+    badge.textContent = unread;
+
+    const el = document.getElementById('cpList');
+    if (!list.length) { el.innerHTML = '<div class="cp-empty">No messages yet.</div>'; return; }
+
+    el.innerHTML = list.map(c => `
+      <div class="ccard ${c.read ? '' : 'unread'}" onclick="markRead(${c.id}, this)">
+        <div class="cc-top">
+          <span class="cc-name">${esc(c.name)}</span>
+          <span class="cc-time">${new Date(c.ts).toLocaleString()}</span>
+        </div>
+        <div class="cc-email">${esc(c.email)}</div>
+        <div class="cc-msg">${esc(c.message)}</div>
+        <a class="cc-reply" href="mailto:${esc(c.email)}?subject=Re: Your message to Simverse&body=Hi ${esc(c.name)},%0A%0A" target="_blank" onclick="event.stopPropagation()">→ REPLY BY EMAIL</a>
+      </div>
+    `).join('');
+  } catch(e) { console.error('contacts load error', e); }
+}
+
+async function markRead(id, card) {
+  if (!card.classList.contains('unread')) return;
+  card.classList.remove('unread');
+  await fetch('/api/contacts/' + id + '/read', {
+    method: 'POST', headers: { 'x-api-key': API_KEY }
+  });
+  // Recount unread
+  const unread = document.querySelectorAll('#cpList .ccard.unread').length;
+  const badge = document.getElementById('unreadBadge');
+  badge.style.display = unread > 0 ? 'inline-block' : 'none';
+  badge.textContent = unread;
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+</script>
+<script>
+'use strict';
+let API_KEY = '';
+let map, markerLayer;
+let chartData = null;
+let activeChartTab = 'daily';
+let autoRefresh;
+
+// ── AUTH ─────────────────────────────────────────────
+document.getElementById('keyInput').addEventListener('keydown', e => { if (e.key === 'Enter') doAuth(); });
+
+async function doAuth() {
+  const key = document.getElementById('keyInput').value.trim();
+  if (!key) return;
+  try {
+    const res = await fetch('/api/stats', { headers: { 'x-api-key': key } });
+    if (!res.ok) { document.getElementById('keyErr').style.display = 'block'; return; }
+    API_KEY = key;
+    document.getElementById('keyPrompt').style.display = 'none';
+    document.getElementById('wrap').style.display = 'flex';
+    initMap();
+    await loadData();
+    autoRefresh = setInterval(loadData, 30000);
+  } catch (e) {
+    document.getElementById('keyErr').style.display = 'block';
+  }
+}
+
+// ── MAP ──────────────────────────────────────────────
+function initMap() {
+  map = L.map('map', { zoomControl: true, attributionControl: true }).setView([30, 10], 2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 18,
+  }).addTo(map);
+  markerLayer = L.layerGroup().addTo(map);
+}
+
+function plotMarkers(visits) {
+  if (!markerLayer) return;
+  markerLayer.clearLayers();
+  visits.forEach(v => {
+    if (v.lat == null || v.lon == null) return;
+    const age = (Date.now() - v.ts) / 1000; // seconds
+    const fresh = age < 300;
+    const col = fresh ? '#22d3ee' : '#3a4a7e';
+    const sz  = fresh ? 10 : 7;
+    const marker = L.circleMarker([v.lat, v.lon], {
+      radius: sz, fillColor: col, color: fresh ? '#fff' : col,
+      weight: fresh ? 1.5 : 0.5, fillOpacity: fresh ? 0.9 : 0.55,
+    });
+    marker.bindPopup(
+      `<div style="font-family:JetBrains Mono,monospace;font-size:10px;line-height:1.8;background:#0f1220;color:#94a3b8;padding:2px">
+        <b style="color:#22d3ee">${v.city || '?'}, ${v.country}</b><br>
+        <span>Page: ${v.path}</span><br>
+        <span>${new Date(v.ts).toLocaleTimeString()}</span>
+      </div>`,
+      { className: 'sv-popup' }
+    );
+    markerLayer.addLayer(marker);
+  });
+}
+
+// ── DATA LOAD ────────────────────────────────────────
+async function loadData() {
+  try {
+    const res = await fetch('/api/stats', { headers: { 'x-api-key': API_KEY } });
+    const d = await res.json();
+    chartData = d;
+
+    // Sidebar
+    document.getElementById('totalVal').textContent = d.total.toLocaleString();
+    const today = new Date().toISOString().slice(0,10);
+    const todayN = d.last30?.[today] || 0;
+    document.getElementById('todayVal').textContent = todayN;
+    document.getElementById('countriesVal').textContent = d.topCountries?.length || 0;
+
+    // Country list
+    const maxC = d.topCountries?.[0]?.[1] || 1;
+    document.getElementById('countryList').innerHTML = (d.topCountries || []).map(([cc, n]) =>
+      `<div class="crow">
+        <span class="cflag">${flag(cc)}</span>
+        <span class="cname">${cc}</span>
+        <div class="cbar-wrap"><div class="cbar" style="width:${(n/maxC*100).toFixed(0)}%"></div></div>
+        <span class="ccount">${n}</span>
+      </div>`
+    ).join('');
+
+    // Live feed
+    const recent = (d.recentVisits || []).slice().reverse();
+    document.getElementById('visitList').innerHTML = recent.slice(0,25).map(v =>
+      `<div class="vrow">
+        <div class="vrow-top">
+          <span class="vflag">${flag(v.country)}</span>
+          <span class="vcity">${v.city || v.country || '?'}</span>
+          <span class="vtime">${relTime(v.ts)}</span>
+        </div>
+        <div class="vrow-bot">${v.path} · ${v.country}</div>
+      </div>`
+    ).join('');
+
+    // Map
+    plotMarkers(d.live || []);
+
+    // Chart
+    drawChart();
+
+  } catch (e) { console.error('Load error', e); }
+}
+
+// ── CHART ────────────────────────────────────────────
+let chartCanvas, chartCtx;
+
+function setChartTab(el, tab) {
+  document.querySelectorAll('.ctab').forEach(t => t.classList.remove('act'));
+  el.classList.add('act');
+  activeChartTab = tab;
+  drawChart();
+}
+
+function drawChart() {
+  if (!chartData) return;
+  if (!chartCanvas) {
+    chartCanvas = document.getElementById('chartCv');
+    chartCtx = chartCanvas.getContext('2d');
+  }
+  const wrap = document.getElementById('chartWrap');
+  chartCanvas.width  = wrap.clientWidth;
+  chartCanvas.height = wrap.clientHeight;
+  const ctx = chartCtx;
+  const W = chartCanvas.width, H = chartCanvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  if (activeChartTab === 'daily') {
+    drawBarChart(ctx, W, H,
+      Object.keys(chartData.last30 || {}),
+      Object.values(chartData.last30 || {}),
+      '#22d3ee',
+    );
+  } else {
+    const pages = chartData.topPaths || [];
+    drawBarChart(ctx, W, H,
+      pages.map(([p]) => p.slice(0, 18)),
+      pages.map(([,n]) => n),
+      '#f59e0b',
+    );
+  }
+}
+
+function drawBarChart(ctx, W, H, labels, vals, col) {
+  if (!vals.length) return;
+  const padL=42, padR=12, padT=8, padB=28;
+  const gW = W - padL - padR;
+  const gH = H - padT - padB;
+  const maxV = Math.max(...vals, 1);
+
+  // Grid lines
+  ctx.strokeStyle = '#1a2138'; ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = padT + gH * (1 - i/4);
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+    ctx.fillStyle = '#475569'; ctx.font = '8px JetBrains Mono';
+    ctx.textAlign = 'right';
+    ctx.fillText(Math.round(maxV * i/4), padL - 4, y + 3);
+  }
+
+  // Bars
+  const bW = gW / labels.length;
+  const gap = Math.max(1, bW * 0.2);
+  labels.forEach((lbl, i) => {
+    const bH = (vals[i] / maxV) * gH;
+    const x  = padL + i * bW + gap/2;
+    const y  = padT + gH - bH;
+    // Gradient bar
+    const g = ctx.createLinearGradient(0, y, 0, y + bH);
+    g.addColorStop(0, col + 'dd');
+    g.addColorStop(1, col + '44');
+    ctx.fillStyle = g;
+    ctx.fillRect(x, y, bW - gap, bH);
+    // Label
+    if (bW > 28) {
+      ctx.fillStyle = '#475569'; ctx.font = '7px JetBrains Mono';
+      ctx.textAlign = 'center';
+      const shortLbl = lbl.length > 6 ? lbl.slice(-6) : lbl;
+      ctx.fillText(shortLbl, x + (bW - gap)/2, H - padB + 14);
+    }
+  });
+}
+
+// ── HELPERS ──────────────────────────────────────────
+function flag(cc) {
+  if (!cc || cc === 'XX') return '🌐';
+  try {
+    return String.fromCodePoint(...[...cc.toUpperCase()].map(c => 0x1F1E6 - 65 + c.charCodeAt(0)));
+  } catch { return '🌐'; }
+}
+
+function relTime(ts) {
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 60)   return `${s}s`;
+  if (s < 3600) return `${Math.floor(s/60)}m`;
+  if (s < 86400)return `${Math.floor(s/3600)}h`;
+  return `${Math.floor(s/86400)}d`;
+}
+
+// Redraw chart on resize
+window.addEventListener('resize', drawChart);
+</script>
+</body>
+</html>
