@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%2306080e'/><text x='50' y='55' font-size='38' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='%2322d3ee'>SIM</text></svg>">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Why Visual Physics Simulations Improve Learning Outcomes — PHYSIX by SimVerseLab</title>
+<meta name="description" content="Research and practical experience on why visual, interactive physics simulations produce better learning outcomes than textbooks and passive demonstrations alone.">
+<meta name="keywords" content="physics simulator, drag drop physics, STEM education, SimVerseLab, PHYSIX">
+<meta property="og:title" content="Why Visual Physics Simulations Improve Learning Outcomes — PHYSIX">
+<meta property="og:description" content="Research and practical experience on why visual, interactive physics simulations produce better learning outcomes than textbooks and passive demonstrations alone.">
+<meta property="og:url" content="https://simverselab.com/physics-education.html">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://simverselab.com/physics-education.html">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080e;--p1:#0b0d18;--p2:#0f1220;--p3:#141828;
+  --b1:#1a2138;--b2:#243060;--b3:#3a4a7e;
+  --cy:#22d3ee;--c2:#06b6d4;--am:#f59e0b;--a2:#d97706;
+  --gn:#22c55e;--rd:#ef4444;--pu:#8b5cf6;--og:#f97316;
+  --sk:#38bdf8;--tl:#14b8a6;--rs:#f43f5e;--lm:#84cc16;
+  --tx:#94a3b8;--t2:#64748b;--t3:#334155;--tb:#e2e8f0;
+  --fu:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;--fd:'Bebas Neue',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--fu);line-height:1.7;min-height:100vh}
+a{color:var(--cy);text-decoration:none}a:hover{color:var(--am)}
+h1,h2,h3{font-family:var(--fd);letter-spacing:2px;color:var(--tb);line-height:1.2}
+h1{font-size:clamp(2.2rem,5vw,3.8rem)}
+h2{font-size:clamp(1.5rem,3vw,2.4rem)}
+h3{font-size:1.2rem;letter-spacing:1.5px}
+p{margin-bottom:1rem;font-size:1rem}
+code,pre{font-family:var(--fm)}
+pre{background:var(--p2);border:1px solid var(--b2);border-radius:6px;padding:1rem;overflow-x:auto;font-size:.85rem;color:var(--tb);margin-bottom:1rem}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(6,8,14,.95);border-bottom:1px solid var(--b1);backdrop-filter:blur(8px)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:52px;display:flex;align-items:center;gap:1rem}
+.logo{font-family:var(--fd);font-size:24px;letter-spacing:3px;color:var(--cy);flex-shrink:0}
+.logo em{color:var(--am);font-style:normal}.logo sub{font-size:10px;color:var(--t2);font-family:var(--fm);letter-spacing:0;vertical-align:baseline}
+.nav-links{display:flex;gap:.25rem;flex-wrap:wrap;align-items:center;margin-left:1.5rem;flex:1}
+.nav-links a{font-size:.7rem;font-weight:600;letter-spacing:.8px;color:var(--t2);padding:4px 8px;border-radius:3px;border:1px solid transparent;text-transform:uppercase;font-family:var(--fm);transition:all .12s}
+.nav-links a:hover,.nav-links a.act{color:var(--cy);border-color:var(--b2);background:var(--p2)}
+.nav-cta{margin-left:auto;padding:6px 16px;border-radius:3px;background:var(--c2);color:#000;font-size:.75rem;font-weight:700;letter-spacing:.8px;font-family:var(--fm);border:none;cursor:pointer;text-transform:uppercase;transition:all .12s;flex-shrink:0;text-decoration:none}
+.nav-cta:hover{background:var(--cy);color:#000}
+
+/* LAYOUT */
+.page{max-width:1200px;margin:0 auto;padding:3rem 2rem}
+.page-narrow{max-width:820px;margin:0 auto;padding:3rem 2rem}
+
+/* HERO */
+.hero{padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-inner{max-width:900px;margin:0 auto;position:relative;z-index:1}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(34,211,238,.07),transparent)}
+.tag{display:inline-block;padding:4px 12px;border-radius:2px;border:1px solid var(--b2);background:var(--p2);font-size:.7rem;font-family:var(--fm);letter-spacing:1.5px;color:var(--cy);margin-bottom:1.2rem;text-transform:uppercase}
+.hero h1{margin-bottom:1.2rem}
+.hero p.lead{font-size:1.1rem;color:var(--tx);max-width:640px;margin:0 auto 2rem}
+.btn-row{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.btn-pri{padding:10px 28px;border-radius:4px;background:var(--c2);color:#000;font-size:.85rem;font-weight:700;letter-spacing:.8px;font-family:var(--fm);border:none;cursor:pointer;text-transform:uppercase;transition:all .12s;text-decoration:none;display:inline-block}
+.btn-pri:hover{background:var(--cy);color:#000}
+.btn-sec{padding:10px 28px;border-radius:4px;background:transparent;color:var(--cy);font-size:.85rem;font-weight:700;letter-spacing:.8px;font-family:var(--fm);border:1px solid var(--b2);cursor:pointer;text-transform:uppercase;transition:all .12s;text-decoration:none;display:inline-block}
+.btn-sec:hover{border-color:var(--cy);background:rgba(34,211,238,.06);color:var(--cy)}
+
+/* SECTION PATTERNS */
+.section{padding:3rem 0;border-top:1px solid var(--b1)}
+.section-label{font-size:.7rem;font-family:var(--fm);letter-spacing:2.5px;color:var(--cy);text-transform:uppercase;margin-bottom:.5rem}
+.section h2{margin-bottom:.75rem}
+.section .sub{font-size:1rem;color:var(--t2);margin-bottom:2rem;max-width:600px}
+
+/* GRID CARDS */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.card{background:var(--p1);border:1px solid var(--b1);border-radius:6px;padding:1.25rem 1.5rem;transition:border-color .15s}
+.card:hover{border-color:var(--b2)}
+.card-icon{font-size:1.4rem;margin-bottom:.6rem}
+.card h3{color:var(--tb);margin-bottom:.4rem;font-size:1rem;letter-spacing:1px}
+.card p{font-size:.875rem;color:var(--t2);margin:0}
+.card-acc{border-left:3px solid var(--cy)}
+.card-am{border-left:3px solid var(--am)}
+.card-gn{border-left:3px solid var(--gn)}
+.card-pu{border-left:3px solid var(--pu)}
+
+/* STEPS */
+.steps{counter-reset:step;display:flex;flex-direction:column;gap:1.5rem}
+.step{display:flex;gap:1.25rem;align-items:flex-start}
+.step::before{counter-increment:step;content:counter(step,'decimal-leading-zero');font-family:var(--fm);font-size:.75rem;font-weight:700;color:var(--cy);background:var(--p2);border:1px solid var(--b2);border-radius:3px;padding:4px 8px;flex-shrink:0;margin-top:2px;letter-spacing:1px}
+.step-body h3{color:var(--tb);font-family:var(--fu);font-size:.95rem;font-weight:600;margin-bottom:.3rem;letter-spacing:0}
+.step-body p{font-size:.875rem;color:var(--t2);margin:0}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.875rem}
+th{text-align:left;padding:8px 12px;background:var(--p2);color:var(--tb);font-family:var(--fm);font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;border-bottom:2px solid var(--b2)}
+td{padding:10px 12px;border-bottom:1px solid var(--b1);color:var(--tx)}
+tr:hover td{background:var(--p1)}
+td.win{color:var(--gn)}td.lose{color:var(--t2)}td.mid{color:var(--am)}
+
+/* CALLOUT */
+.callout{background:var(--p2);border:1px solid var(--b2);border-left:3px solid var(--cy);border-radius:4px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem}
+.callout.warn{border-left-color:var(--am)}.callout.tip{border-left-color:var(--gn)}
+.callout strong{color:var(--tb)}
+.callout .label{font-size:.65rem;font-family:var(--fm);letter-spacing:1.5px;text-transform:uppercase;color:var(--cy);display:block;margin-bottom:.3rem}
+.callout.warn .label{color:var(--am)}.callout.tip .label{color:var(--gn)}
+
+/* FORMULA */
+.formula{background:var(--p2);border:1px solid var(--b2);border-radius:4px;padding:.75rem 1.25rem;margin:1rem 0;font-family:var(--fm);font-size:1rem;color:var(--cy);text-align:center;letter-spacing:.5px}
+.formula small{color:var(--t2);font-size:.75rem;display:block;margin-top:.25rem}
+
+/* BADGE */
+.badge{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-family:var(--fm);font-weight:700;letter-spacing:1px;margin-left:4px;text-transform:uppercase}
+.badge-cy{background:rgba(34,211,238,.12);color:var(--cy);border:1px solid rgba(34,211,238,.3)}
+.badge-am{background:rgba(245,158,11,.12);color:var(--am);border:1px solid rgba(245,158,11,.3)}
+.badge-gn{background:rgba(34,197,94,.12);color:var(--gn);border:1px solid rgba(34,197,94,.3)}
+.badge-rd{background:rgba(239,68,68,.12);color:var(--rd);border:1px solid rgba(239,68,68,.3)}
+
+/* TOC */
+.toc{background:var(--p1);border:1px solid var(--b1);border-radius:6px;padding:1.25rem;margin-bottom:2rem;font-size:.875rem}
+.toc-title{font-family:var(--fm);font-size:.65rem;letter-spacing:2px;color:var(--t2);text-transform:uppercase;margin-bottom:.75rem}
+.toc ol{padding-left:1.25rem;color:var(--cy)}
+.toc li{margin-bottom:.3rem}.toc a{color:var(--cy)}.toc a:hover{color:var(--am)}
+
+/* FOOTER */
+footer{background:var(--p1);border-top:1px solid var(--b1);padding:2.5rem 2rem;margin-top:4rem}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem}
+.footer-col h4{font-family:var(--fm);font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-bottom:.75rem}
+.footer-col a{display:block;font-size:.8rem;color:var(--t2);margin-bottom:.35rem;transition:color .12s}
+.footer-col a:hover{color:var(--cy)}
+.footer-bottom{max-width:1200px;margin:.75rem auto 0;padding-top:.75rem;border-top:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--t2);font-family:var(--fm)}
+@media(max-width:700px){.footer-inner{grid-template-columns:1fr 1fr}.nav-links{display:none}}
+</style>
+<script src="seo.js"></script>
+</head>
+<body data-page="physics-education" data-slug="physics-education.html">
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">PHY<em>SIX</em><sub>v5</sub></a>
+    <div class="nav-links"><a href="/physix/">Simulator</a><a href="index.html">Home</a><a href="features.html">Features</a><a href="tutorials.html">Tutorials</a><a href="discussions.html" class="act">Discussions</a><a href="simulations.html">Community</a></div>
+    <a href="/physix/" class="nav-cta">▶ Launch Sim</a>
+  </div>
+</nav>
+
+<div class="hero" style="padding:3rem 2rem 2rem">
+  <div class="hero-inner">
+    <div class="tag">Discussion · Physics Education</div>
+    <h1>Why Simulations<br><span style="color:var(--cy)">Work Better</span></h1>
+    <p class="lead">The research is clear: students who interact with physics simulations outperform those taught by lecture alone. Here's why — and how to make the most of it.</p>
+  </div>
+</div>
+
+<div class="page-narrow">
+
+  <div class="section">
+    <div class="section-label">The problem</div>
+    <h2>Physics Is Hard to Visualise</h2>
+    <p>The equations of classical mechanics are compact and elegant — but they describe things that happen in four dimensions (x, y, z, t) with multiple interacting forces. A student staring at F = ma on a page has no intuitive sense of what that means when a rocket is fighting gravity while burning fuel at a variable rate.</p>
+    <p>This is the gap that interactive simulation fills: it turns abstract symbols into visible, interactive behaviour. When students can drag a mass and watch the spring force arrow grow in real time, Hooke's law stops being memorised and starts being <em>felt</em>.</p>
+    <div class="callout warn">
+      <span class="label">Common mistake</span>
+      Passive simulation — watching a teacher run a simulation while students observe — produces much smaller gains than <strong>active simulation</strong>, where students manipulate parameters themselves. PHYSIX is designed for active use.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Evidence</div>
+    <h2>What the Research Shows</h2>
+    <div class="grid-2">
+      <div class="card card-acc">
+        <h3>Conceptual understanding</h3>
+        <p>Studies using PhET-style sims consistently find gains of 15–25% on conceptual post-tests compared to traditional instruction. The key mediator is active manipulation of variables.</p>
+      </div>
+      <div class="card card-gn">
+        <h3>Misconception correction</h3>
+        <p>Interactive simulations are particularly effective at addressing the most persistent misconceptions — like "heavier objects fall faster". A 10-second PHYSIX demo refutes this viscerally.</p>
+      </div>
+      <div class="card card-am">
+        <h3>Transfer to novel problems</h3>
+        <p>Students who built their understanding through simulation perform better on novel transfer problems — they understand the mechanism, not just the formula.</p>
+      </div>
+      <div class="card card-pu">
+        <h3>Engagement & motivation</h3>
+        <p>Self-reported motivation and class participation consistently improve when simulations are used, especially for students who normally disengage from abstract instruction.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Best practices</div>
+    <h2>How to Use PHYSIX Effectively</h2>
+    <div class="steps">
+      <div class="step"><div class="step-body"><h3>Predict before playing</h3><p>Ask students to predict what will happen before you press Play. This activates prior knowledge and makes the result — whether confirming or surprising — much more memorable.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Change one variable at a time</h3><p>Controlled experimentation is a core scientific skill. Ask students to keep all parameters fixed except one and plot how the outcome changes. PHYSIX's Properties panel makes this easy.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Connect to formulas</h3><p>Every PHYSIX preset fires a notification with the relevant formula. Pause the simulation, point to the formula, and show how the numbers in the simulation match the equation.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Ask "what if" questions</h3><p>The freeform sandbox excels at answering "what if" questions that textbooks never pose. What if the Moon were twice as massive? What if friction were zero? This builds physical intuition that lasts.</p></div></div>
+    </div>
+    <div class="callout tip">
+      <span class="label">Ready-made lesson plans</span>
+      Browse <a href="stem-lesson-plans.html">STEM lesson plans using PHYSIX →</a> for curriculum-linked activities you can use tomorrow.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Tools</div>
+    <h2>Choosing the Right Simulation Tool</h2>
+    <p>Not all simulations are equal. The best tools for physics education share three properties: they are immediately interactive (no loading, no tutorials required to start), they show live consequences of parameter changes, and they link to real equations.</p>
+    <p><a href="/physix/">PHYSIX</a> is designed with all three in mind. The live energy readout in the topbar, the formula notifications on preset load, and the direct-manipulation drag interface are all deliberate educational design choices.</p>
+    <p>See also: <a href="compare-phet.html">PHYSIX vs PhET — which to use when →</a></p>
+  </div>
+</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>SimVerseLab</h4>
+      <a href="index.html">Home</a>
+      <a href="features.html">Features</a>
+      <a href="use-cases.html">Use Cases</a>
+      <a href="/physix/">Launch Simulator</a>
+    </div>
+    <div class="footer-col">
+      <h4>Learn</h4>
+      <a href="tutorial-projectile.html">Projectile Motion Tutorial</a>
+      <a href="tutorial-pendulum.html">Pendulum & Chaos Tutorial</a>
+      <a href="tutorial-solar-system.html">Solar System Tutorial</a>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <a href="compare-phet.html">PHYSIX vs PhET</a>
+      <a href="physics-education.html">Physics Education</a>
+      <a href="stem-lesson-plans.html">STEM Lesson Plans</a>
+      <a href="drag-drop-physics.html">Drag & Drop Physics</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 SimVerseLab — PHYSIX v5</span>
+    <span><a href="https://simverselab.com">simverselab.com</a></span>
+  </div>
+</footer>
+</body>
+</html>

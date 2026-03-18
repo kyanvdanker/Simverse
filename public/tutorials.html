@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%2306080e'/><text x='50' y='55' font-size='38' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='%2322d3ee'>SIM</text></svg>">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Physics Tutorials — Learn with PHYSIX by SimVerseLab</title>
+<meta name="description" content="Step-by-step physics tutorials using PHYSIX. Covers projectile motion, pendulums, chaos theory, orbital mechanics and more. Free, browser-based, no install needed.">
+<meta name="keywords" content="physics tutorials, projectile motion tutorial, pendulum simulation, orbital mechanics, STEM physics, SimVerseLab, PHYSIX">
+<meta property="og:title" content="Physics Tutorials — PHYSIX by SimVerseLab">
+<meta property="og:description" content="Step-by-step physics tutorials using PHYSIX. Covers projectile motion, pendulums, chaos theory, orbital mechanics and more.">
+<meta property="og:url" content="https://simverselab.com/tutorials.html">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://simverselab.com/tutorials.html">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080e;--p1:#0b0d18;--p2:#0f1220;--p3:#141828;
+  --b1:#1a2138;--b2:#243060;--b3:#3a4a7e;
+  --cy:#22d3ee;--c2:#06b6d4;--am:#f59e0b;
+  --gn:#22c55e;--rd:#ef4444;--pu:#8b5cf6;--og:#f97316;
+  --sk:#38bdf8;--tl:#14b8a6;
+  --tx:#94a3b8;--t2:#64748b;--t3:#334155;--tb:#e2e8f0;
+  --fu:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;--fd:'Bebas Neue',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--fu);line-height:1.7;min-height:100vh}
+a{color:var(--cy);text-decoration:none}a:hover{color:var(--am)}
+h1,h2,h3{font-family:var(--fd);letter-spacing:2px;color:var(--tb);line-height:1.2}
+h1{font-size:clamp(2rem,5vw,3.6rem)}
+h2{font-size:clamp(1.4rem,3vw,2.2rem)}
+p{margin-bottom:1rem;font-size:1rem}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(6,8,14,.95);border-bottom:1px solid var(--b1);backdrop-filter:blur(8px)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:52px;display:flex;align-items:center;gap:1rem}
+.logo{font-family:var(--fd);font-size:24px;letter-spacing:3px;color:var(--cy);flex-shrink:0}
+.logo em{color:var(--am);font-style:normal}.logo sub{font-size:10px;color:var(--t2);font-family:var(--fm);letter-spacing:0;vertical-align:baseline}
+.nav-links{display:flex;gap:.25rem;align-items:center;margin-left:1.5rem;flex:1;flex-wrap:wrap}
+.nav-links a{font-size:.7rem;font-weight:600;letter-spacing:.8px;color:var(--t2);padding:4px 8px;border-radius:3px;border:1px solid transparent;text-transform:uppercase;font-family:var(--fm);transition:all .12s}
+.nav-links a:hover,.nav-links a.act{color:var(--cy);border-color:var(--b2);background:var(--p2)}
+.nav-cta{margin-left:auto;padding:6px 16px;border-radius:3px;background:var(--c2);color:#000;font-size:.75rem;font-weight:700;letter-spacing:.8px;font-family:var(--fm);text-transform:uppercase;transition:all .12s;flex-shrink:0;text-decoration:none}
+.nav-cta:hover{background:var(--cy);color:#000}
+
+.page{max-width:1200px;margin:0 auto;padding:3rem 2rem}
+
+.hero{padding:4rem 2rem 3rem;text-align:center;position:relative;overflow:hidden}
+.hero-inner{max-width:800px;margin:0 auto;position:relative;z-index:1}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(34,211,238,.07),transparent)}
+.tag{display:inline-block;padding:4px 12px;border-radius:2px;border:1px solid var(--b2);background:var(--p2);font-size:.7rem;font-family:var(--fm);letter-spacing:1.5px;color:var(--cy);margin-bottom:1.2rem;text-transform:uppercase}
+.lead{font-size:1.05rem;color:var(--tx);max-width:600px;margin:1rem auto 0}
+
+/* FILTER PILLS */
+.filter-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:2rem;align-items:center}
+.filter-label{font-size:.65rem;font-family:var(--fm);letter-spacing:2px;color:var(--t2);text-transform:uppercase;margin-right:.25rem}
+.fpill{padding:4px 12px;border-radius:99px;border:1px solid var(--b2);background:transparent;color:var(--t2);font-size:.72rem;font-family:var(--fm);cursor:pointer;transition:all .12s}
+.fpill:hover,.fpill.act{border-color:var(--cy);background:rgba(34,211,238,.08);color:var(--cy)}
+
+/* TUTORIAL CARDS */
+.tut-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.25rem}
+
+.tut-card{background:var(--p1);border:1px solid var(--b1);border-radius:8px;overflow:hidden;transition:border-color .15s,transform .15s;display:flex;flex-direction:column}
+.tut-card:hover{border-color:var(--b3);transform:translateY(-2px)}
+
+.tut-banner{height:6px;width:100%}
+.tut-body{padding:1.25rem 1.5rem;flex:1;display:flex;flex-direction:column}
+.tut-meta{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}
+.tut-icon{font-size:1.3rem}
+.tut-cat{font-size:.65rem;font-family:var(--fm);letter-spacing:1.5px;color:var(--t2);text-transform:uppercase;background:var(--p2);border:1px solid var(--b1);border-radius:2px;padding:2px 7px}
+.tut-difficulty{font-size:.65rem;font-family:var(--fm);letter-spacing:1px;padding:2px 7px;border-radius:2px;border:1px solid}
+.diff-beginner{color:var(--gn);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)}
+.diff-intermediate{color:var(--am);border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.08)}
+.diff-advanced{color:var(--rd);border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.08)}
+
+.tut-title{font-family:var(--fd);font-size:1.3rem;letter-spacing:1.5px;color:var(--tb);margin-bottom:.4rem;line-height:1.2}
+.tut-desc{font-size:.875rem;color:var(--t2);line-height:1.6;flex:1;margin-bottom:1rem}
+
+.tut-topics{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1rem}
+.topic-chip{font-size:.65rem;font-family:var(--fm);color:var(--t2);background:var(--p2);border:1px solid var(--b1);border-radius:2px;padding:2px 7px}
+
+.tut-foot{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.5rem;border-top:1px solid var(--b1)}
+.tut-time{font-size:.72rem;font-family:var(--fm);color:var(--t2)}
+.tut-time span{color:var(--am)}
+.tut-link{margin-left:auto;padding:6px 16px;border-radius:3px;background:transparent;border:1px solid var(--b2);color:var(--cy);font-size:.72rem;font-family:var(--fm);font-weight:700;letter-spacing:.8px;text-transform:uppercase;transition:all .12s}
+.tut-link:hover{background:var(--c2);color:#000;border-color:var(--c2)}
+
+/* COMING SOON CARD */
+.tut-card.soon{opacity:.55}
+.tut-card.soon .tut-link{color:var(--t2);border-color:var(--b1);cursor:default;pointer-events:none}
+
+/* PATH SECTION */
+.path-section{margin-top:3rem;padding-top:2.5rem;border-top:1px solid var(--b1)}
+.path-section h2{margin-bottom:.5rem}
+.path-section .sub{font-size:.9rem;color:var(--t2);margin-bottom:1.5rem}
+.path-row{display:flex;gap:0;align-items:stretch;flex-wrap:wrap}
+.path-step{flex:1;min-width:160px;background:var(--p1);border:1px solid var(--b1);padding:1rem 1.25rem;position:relative}
+.path-step:not(:last-child)::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--b2);font-size:1rem;z-index:1}
+.path-step:first-child{border-radius:6px 0 0 6px}
+.path-step:last-child{border-radius:0 6px 6px 0}
+.path-num{font-family:var(--fm);font-size:.65rem;color:var(--cy);letter-spacing:1.5px;margin-bottom:.3rem}
+.path-title{font-size:.85rem;font-weight:600;color:var(--tb);margin-bottom:.2rem}
+.path-sub{font-size:.75rem;color:var(--t2)}
+
+footer{background:var(--p1);border-top:1px solid var(--b1);padding:2rem;margin-top:4rem}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem}
+.footer-col h4{font-family:var(--fm);font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-bottom:.75rem}
+.footer-col a{display:block;font-size:.8rem;color:var(--t2);margin-bottom:.35rem;transition:color .12s}
+.footer-col a:hover{color:var(--cy)}
+.footer-bottom{max-width:1200px;margin:.75rem auto 0;padding-top:.75rem;border-top:1px solid var(--b1);display:flex;justify-content:space-between;font-size:.75rem;color:var(--t2);font-family:var(--fm)}
+@media(max-width:680px){.tut-grid{grid-template-columns:1fr}.path-row{flex-direction:column}.path-step::after{display:none}.path-step{border-radius:0}.path-step:first-child{border-radius:6px 6px 0 0}.path-step:last-child{border-radius:0 0 6px 6px}.footer-inner{grid-template-columns:1fr 1fr}.nav-links{display:none}}
+</style>
+<script src="seo.js"></script>
+</head>
+<body data-page="tutorials" data-slug="tutorials.html">
+
+<nav>
+  <div class="nav-inner">
+    <a href="landing.html" class="logo">PHY<em>SIX</em><sub>v5</sub></a>
+    <div class="nav-links">
+      <a href="landing.html">Home</a>
+      <a href="features.html">Features</a>
+      <a href="tutorials.html" class="act">Tutorials</a>
+      <a href="discussions.html">Discussions</a>
+      <a href="simulations.html">Community</a>
+    </div>
+    <a href="index.html" class="nav-cta">▶ Launch Sim</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="tag">Tutorials</div>
+    <h1>Learn Physics<br><span style="color:var(--cy)">By Doing</span></h1>
+    <p class="lead">Step-by-step guides that take you from a blank canvas to a working simulation — with the equations explained along the way.</p>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- Filter pills -->
+  <div class="filter-row">
+    <span class="filter-label">Topic</span>
+    <button class="fpill act" onclick="filter('all',this)">All</button>
+    <button class="fpill" onclick="filter('mechanics',this)">Mechanics</button>
+    <button class="fpill" onclick="filter('oscillations',this)">Oscillations</button>
+    <button class="fpill" onclick="filter('astronomy',this)">Astronomy</button>
+    <button class="fpill" onclick="filter('em',this)">Electromagnetism</button>
+    <button class="fpill" onclick="filter('advanced',this)">Advanced</button>
+  </div>
+
+  <!-- Tutorial cards -->
+  <div class="tut-grid" id="tut-grid">
+
+    <!-- 1 Projectile -->
+    <div class="tut-card" data-cat="mechanics">
+      <div class="tut-banner" style="background:linear-gradient(90deg,var(--gn),var(--tl))"></div>
+      <div class="tut-body">
+        <div class="tut-meta">
+          <span class="tut-icon">🎯</span>
+          <span class="tut-cat">Mechanics</span>
+          <span class="tut-difficulty diff-beginner">Beginner</span>
+        </div>
+        <div class="tut-title">Projectile Motion</div>
+        <p class="tut-desc">Launch objects at different angles, apply drag, and verify the range formula. A perfect first experiment — no maths beyond GCSE required.</p>
+        <div class="tut-topics">
+          <span class="topic-chip">Kinematics</span>
+          <span class="topic-chip">Air resistance</span>
+          <span class="topic-chip">Parabolic trajectory</span>
+          <span class="topic-chip">BINAS ref</span>
+        </div>
+      </div>
+      <div class="tut-foot">
+        <div class="tut-time">⏱ <span>25 min</span></div>
+        <a href="tutorial-projectile.html" class="tut-link">Start tutorial →</a>
+      </div>
+    </div>
+
+    <!-- 2 Pendulum -->
+    <div class="tut-card" data-cat="oscillations">
+      <div class="tut-banner" style="background:linear-gradient(90deg,var(--cy),var(--pu))"></div>
+      <div class="tut-body">
+        <div class="tut-meta">
+          <span class="tut-icon">🌀</span>
+          <span class="tut-cat">Oscillations</span>
+          <span class="tut-difficulty diff-intermediate">Intermediate</span>
+        </div>
+        <div class="tut-title">Pendulum & Chaos Theory</div>
+        <p class="tut-desc">Build a simple pendulum, verify T = 2π√(L/g), then add a second bob and watch deterministic chaos emerge from two nearly identical starting conditions.</p>
+        <div class="tut-topics">
+          <span class="topic-chip">SHM</span>
+          <span class="topic-chip">Hooke's law</span>
+          <span class="topic-chip">Chaos theory</span>
+          <span class="topic-chip">Lyapunov exponent</span>
+        </div>
+      </div>
+      <div class="tut-foot">
+        <div class="tut-time">⏱ <span>35 min</span></div>
+        <a href="tutorial-pendulum.html" class="tut-link">Start tutorial →</a>
+      </div>
+    </div>
+
+    <!-- 3 Solar System -->
+    <div class="tut-card" data-cat="astronomy">
+      <div class="tut-banner" style="background:linear-gradient(90deg,var(--am),var(--og))"></div>
+      <div class="tut-body">
+        <div class="tut-meta">
+          <span class="tut-icon">☀</span>
+          <span class="tut-cat">Astronomy</span>
+          <span class="tut-difficulty diff-intermediate">Intermediate</span>
+        </div>
+        <div class="tut-title">Build a Solar System</div>
+        <p class="tut-desc">Put a planet in circular orbit from scratch, derive Kepler's third law empirically, and explore escape velocity and gravitational slingshots.</p>
+        <div class="tut-topics">
+          <span class="topic-chip">Kepler's laws</span>
+          <span class="topic-chip">n-body gravity</span>
+          <span class="topic-chip">Orbital velocity</span>
+          <span class="topic-chip">Escape velocity</span>
+        </div>
+      </div>
+      <div class="tut-foot">
+        <div class="tut-time">⏱ <span>45 min</span></div>
+        <a href="tutorial-solar-system.html" class="tut-link">Start tutorial →</a>
+      </div>
+    </div>
+
+    <!-- 4 Newton's Cradle — coming soon -->
+    <div class="tut-card soon" data-cat="mechanics">
+      <div class="tut-banner" style="background:var(--b2)"></div>
+      <div class="tut-body">
+        <div class="tut-meta">
+          <span class="tut-icon">⚫</span>
+          <span class="tut-cat">Mechanics</span>
+          <span class="tut-difficulty diff-beginner">Beginner</span>
+        </div>
+        <div class="tut-title">Newton's Cradle</div>
+        <p class="tut-desc">Verify conservation of momentum in elastic collisions. Why does pulling two balls always release exactly two on the other side? This tutorial shows you why.</p>
+        <div class="tut-topics">
+          <span class="topic-chip">Conservation of momentum</span>
+          <span class="topic-chip">Elastic collision</span>
+          <span class="topic-chip">Restitution</span>
+        </div>
+      </div>
+      <div class="tut-foot">
+        <div class="tut-time">⏱ <span>20 min</span></div>
+        <span class="tut-link">Coming soon</span>
+      </div>
+    </div>
+
+    <!-- 5 Cyclotron — coming soon -->
+    <div class="tut-card soon" data-cat="em">
+      <div class="tut-banner" style="background:var(--b2)"></div>
+      <div class="tut-body">
+        <div class="tut-meta">
+          <span class="tut-icon">🧲</span>
+          <span class="tut-cat">Electromagnetism</span>
+          <span class="tut-difficulty diff-intermediate">Intermediate</span>
+        </div>
+        <div class="tut-title">Cyclotron & Lorentz Force</div>
+        <p class="tut-desc">Derive the cyclotron radius r = mv/qB by measuring the circular orbit of a proton in a magnetic field, then verify it by changing speed and field strength.</p>
+        <div class="tut-topics">
+          <span class="topic-chip">Lorentz force</span>
+          <span class="topic-chip">Cyclotron radius</span>
+          <span class="topic-chip">Magnetic field</span>
+        </div>
+      </div>
+      <div class="tut-foot">
+        <div class="tut-time">⏱ <span>30 min</span></div>
+        <span class="tut-link">Coming soon</span>
+      </div>
+    </div>
+
+    <!-- 6 Rocket Launch — coming soon -->
+    <div class="tut-card soon" data-cat="advanced">
+      <div class="tut-banner" style="background:var(--b2)"></div>
+      <div class="tut-body">
+        <div class="tut-meta">
+          <span class="tut-icon">🚀</span>
+          <span class="tut-cat">Advanced</span>
+          <span class="tut-difficulty diff-advanced">Advanced</span>
+        </div>
+        <div class="tut-title">Rocket Launch & Tsiolkovsky</div>
+        <p class="tut-desc">Model a rocket launch from first principles. Configure exhaust velocity, mass flow rate, and fuel load — then watch the Tsiolkovsky equation play out in real time.</p>
+        <div class="tut-topics">
+          <span class="topic-chip">Variable mass</span>
+          <span class="topic-chip">Thrust</span>
+          <span class="topic-chip">Tsiolkovsky equation</span>
+          <span class="topic-chip">Δv budget</span>
+        </div>
+      </div>
+      <div class="tut-foot">
+        <div class="tut-time">⏱ <span>40 min</span></div>
+        <span class="tut-link">Coming soon</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Learning path -->
+  <div class="path-section">
+    <div class="section-label" style="font-size:.7rem;font-family:var(--fm);letter-spacing:2.5px;color:var(--cy);text-transform:uppercase;margin-bottom:.5rem">Recommended path</div>
+    <h2>New to PHYSIX? Start Here</h2>
+    <p class="sub">These three tutorials build on each other — complete them in order for the best foundation.</p>
+    <div class="path-row">
+      <div class="path-step">
+        <div class="path-num">STEP 01</div>
+        <div class="path-title"><a href="tutorial-projectile.html">Projectile Motion</a></div>
+        <div class="path-sub">Learn the interface · drag & drop · forces · graph panel</div>
+      </div>
+      <div class="path-step">
+        <div class="path-num">STEP 02</div>
+        <div class="path-title"><a href="tutorial-pendulum.html">Pendulum & Chaos</a></div>
+        <div class="path-sub">Spring forces · SHM · sensitive initial conditions</div>
+      </div>
+      <div class="path-step">
+        <div class="path-num">STEP 03</div>
+        <div class="path-title"><a href="tutorial-solar-system.html">Solar System</a></div>
+        <div class="path-sub">n-body gravity · orbital velocity · Kepler's laws</div>
+      </div>
+      <div class="path-step">
+        <div class="path-num">THEN</div>
+        <div class="path-title"><a href="simulations.html">Community Gallery</a></div>
+        <div class="path-sub">Explore what others have built · remix & share your own</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>SimVerseLab</h4>
+      <a href="landing.html">Home</a>
+      <a href="features.html">Features</a>
+      <a href="use-cases.html">Use Cases</a>
+      <a href="index.html">Launch Simulator</a>
+    </div>
+    <div class="footer-col">
+      <h4>Tutorials</h4>
+      <a href="tutorial-projectile.html">Projectile Motion</a>
+      <a href="tutorial-pendulum.html">Pendulum & Chaos</a>
+      <a href="tutorial-solar-system.html">Solar System</a>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <a href="simulations.html">Community Simulations</a>
+      <a href="discussions.html">Discussions</a>
+      <a href="compare-phet.html">PHYSIX vs PhET</a>
+      <a href="stem-lesson-plans.html">Lesson Plans</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 SimVerseLab — PHYSIX v5</span>
+    <span><a href="https://simverselab.com">simverselab.com</a></span>
+  </div>
+</footer>
+
+<script>
+function filter(cat, btn) {
+  document.querySelectorAll('.fpill').forEach(p => p.classList.remove('act'));
+  btn.classList.add('act');
+  document.querySelectorAll('.tut-card').forEach(card => {
+    card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

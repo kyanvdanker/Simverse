@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%2306080e'/><text x='50' y='55' font-size='38' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='%2322d3ee'>SIM</text></svg>">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>How to Simulate a Solar System — Orbital Mechanics Tutorial — PHYSIX by SimVerseLab</title>
+<meta name="description" content="Build an n-body solar system simulation from scratch in PHYSIX. Learn Kepler's laws, orbital velocity, escape velocity, and gravitational slingshots.">
+<meta name="keywords" content="physics simulator, drag drop physics, STEM education, SimVerseLab, PHYSIX">
+<meta property="og:title" content="How to Simulate a Solar System — Orbital Mechanics Tutorial — PHYSIX">
+<meta property="og:description" content="Build an n-body solar system simulation from scratch in PHYSIX. Learn Kepler's laws, orbital velocity, escape velocity, and gravitational slingshots.">
+<meta property="og:url" content="https://simverselab.com/tutorial-solar-system.html">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://simverselab.com/tutorial-solar-system.html">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080e;--p1:#0b0d18;--p2:#0f1220;--p3:#141828;
+  --b1:#1a2138;--b2:#243060;--b3:#3a4a7e;
+  --cy:#22d3ee;--c2:#06b6d4;--am:#f59e0b;--a2:#d97706;
+  --gn:#22c55e;--rd:#ef4444;--pu:#8b5cf6;--og:#f97316;
+  --sk:#38bdf8;--tl:#14b8a6;--rs:#f43f5e;--lm:#84cc16;
+  --tx:#94a3b8;--t2:#64748b;--t3:#334155;--tb:#e2e8f0;
+  --fu:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;--fd:'Bebas Neue',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--fu);line-height:1.7;min-height:100vh}
+a{color:var(--cy);text-decoration:none}a:hover{color:var(--am)}
+h1,h2,h3{font-family:var(--fd);letter-spacing:2px;color:var(--tb);line-height:1.2}
+h1{font-size:clamp(2.2rem,5vw,3.8rem)}
+h2{font-size:clamp(1.5rem,3vw,2.4rem)}
+h3{font-size:1.2rem;letter-spacing:1.5px}
+p{margin-bottom:1rem;font-size:1rem}
+code,pre{font-family:var(--fm)}
+pre{background:var(--p2);border:1px solid var(--b2);border-radius:6px;padding:1rem;overflow-x:auto;font-size:.85rem;color:var(--tb);margin-bottom:1rem}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(6,8,14,.95);border-bottom:1px solid var(--b1);backdrop-filter:blur(8px)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:52px;display:flex;align-items:center;gap:1rem}
+.logo{font-family:var(--fd);font-size:24px;letter-spacing:3px;color:var(--cy);flex-shrink:0}
+.logo em{color:var(--am);font-style:normal}.logo sub{font-size:10px;color:var(--t2);font-family:var(--fm);letter-spacing:0;vertical-align:baseline}
+.nav-links{display:flex;gap:.25rem;flex-wrap:wrap;align-items:center;margin-left:1.5rem;flex:1}
+.nav-links a{font-size:.7rem;font-weight:600;letter-spacing:.8px;color:var(--t2);padding:4px 8px;border-radius:3px;border:1px solid transparent;text-transform:uppercase;font-family:var(--fm);transition:all .12s}
+.nav-links a:hover,.nav-links a.act{color:var(--cy);border-color:var(--b2);background:var(--p2)}
+.nav-cta{margin-left:auto;padding:6px 16px;border-radius:3px;background:var(--c2);color:#000;font-size:.75rem;font-weight:700;letter-spacing:.8px;font-family:var(--fm);border:none;cursor:pointer;text-transform:uppercase;transition:all .12s;flex-shrink:0;text-decoration:none}
+.nav-cta:hover{background:var(--cy);color:#000}
+
+/* LAYOUT */
+.page{max-width:1200px;margin:0 auto;padding:3rem 2rem}
+.page-narrow{max-width:820px;margin:0 auto;padding:3rem 2rem}
+
+/* HERO */
+.hero{padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-inner{max-width:900px;margin:0 auto;position:relative;z-index:1}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(34,211,238,.07),transparent)}
+.tag{display:inline-block;padding:4px 12px;border-radius:2px;border:1px solid var(--b2);background:var(--p2);font-size:.7rem;font-family:var(--fm);letter-spacing:1.5px;color:var(--cy);margin-bottom:1.2rem;text-transform:uppercase}
+.hero h1{margin-bottom:1.2rem}
+.hero p.lead{font-size:1.1rem;color:var(--tx);max-width:640px;margin:0 auto 2rem}
+.btn-row{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.btn-pri{padding:10px 28px;border-radius:4px;background:var(--c2);color:#000;font-size:.85rem;font-weight:700;letter-spacing:.8px;font-family:var(--fm);border:none;cursor:pointer;text-transform:uppercase;transition:all .12s;text-decoration:none;display:inline-block}
+.btn-pri:hover{background:var(--cy);color:#000}
+.btn-sec{padding:10px 28px;border-radius:4px;background:transparent;color:var(--cy);font-size:.85rem;font-weight:700;letter-spacing:.8px;font-family:var(--fm);border:1px solid var(--b2);cursor:pointer;text-transform:uppercase;transition:all .12s;text-decoration:none;display:inline-block}
+.btn-sec:hover{border-color:var(--cy);background:rgba(34,211,238,.06);color:var(--cy)}
+
+/* SECTION PATTERNS */
+.section{padding:3rem 0;border-top:1px solid var(--b1)}
+.section-label{font-size:.7rem;font-family:var(--fm);letter-spacing:2.5px;color:var(--cy);text-transform:uppercase;margin-bottom:.5rem}
+.section h2{margin-bottom:.75rem}
+.section .sub{font-size:1rem;color:var(--t2);margin-bottom:2rem;max-width:600px}
+
+/* GRID CARDS */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.card{background:var(--p1);border:1px solid var(--b1);border-radius:6px;padding:1.25rem 1.5rem;transition:border-color .15s}
+.card:hover{border-color:var(--b2)}
+.card-icon{font-size:1.4rem;margin-bottom:.6rem}
+.card h3{color:var(--tb);margin-bottom:.4rem;font-size:1rem;letter-spacing:1px}
+.card p{font-size:.875rem;color:var(--t2);margin:0}
+.card-acc{border-left:3px solid var(--cy)}
+.card-am{border-left:3px solid var(--am)}
+.card-gn{border-left:3px solid var(--gn)}
+.card-pu{border-left:3px solid var(--pu)}
+
+/* STEPS */
+.steps{counter-reset:step;display:flex;flex-direction:column;gap:1.5rem}
+.step{display:flex;gap:1.25rem;align-items:flex-start}
+.step::before{counter-increment:step;content:counter(step,'decimal-leading-zero');font-family:var(--fm);font-size:.75rem;font-weight:700;color:var(--cy);background:var(--p2);border:1px solid var(--b2);border-radius:3px;padding:4px 8px;flex-shrink:0;margin-top:2px;letter-spacing:1px}
+.step-body h3{color:var(--tb);font-family:var(--fu);font-size:.95rem;font-weight:600;margin-bottom:.3rem;letter-spacing:0}
+.step-body p{font-size:.875rem;color:var(--t2);margin:0}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.875rem}
+th{text-align:left;padding:8px 12px;background:var(--p2);color:var(--tb);font-family:var(--fm);font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;border-bottom:2px solid var(--b2)}
+td{padding:10px 12px;border-bottom:1px solid var(--b1);color:var(--tx)}
+tr:hover td{background:var(--p1)}
+td.win{color:var(--gn)}td.lose{color:var(--t2)}td.mid{color:var(--am)}
+
+/* CALLOUT */
+.callout{background:var(--p2);border:1px solid var(--b2);border-left:3px solid var(--cy);border-radius:4px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem}
+.callout.warn{border-left-color:var(--am)}.callout.tip{border-left-color:var(--gn)}
+.callout strong{color:var(--tb)}
+.callout .label{font-size:.65rem;font-family:var(--fm);letter-spacing:1.5px;text-transform:uppercase;color:var(--cy);display:block;margin-bottom:.3rem}
+.callout.warn .label{color:var(--am)}.callout.tip .label{color:var(--gn)}
+
+/* FORMULA */
+.formula{background:var(--p2);border:1px solid var(--b2);border-radius:4px;padding:.75rem 1.25rem;margin:1rem 0;font-family:var(--fm);font-size:1rem;color:var(--cy);text-align:center;letter-spacing:.5px}
+.formula small{color:var(--t2);font-size:.75rem;display:block;margin-top:.25rem}
+
+/* BADGE */
+.badge{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-family:var(--fm);font-weight:700;letter-spacing:1px;margin-left:4px;text-transform:uppercase}
+.badge-cy{background:rgba(34,211,238,.12);color:var(--cy);border:1px solid rgba(34,211,238,.3)}
+.badge-am{background:rgba(245,158,11,.12);color:var(--am);border:1px solid rgba(245,158,11,.3)}
+.badge-gn{background:rgba(34,197,94,.12);color:var(--gn);border:1px solid rgba(34,197,94,.3)}
+.badge-rd{background:rgba(239,68,68,.12);color:var(--rd);border:1px solid rgba(239,68,68,.3)}
+
+/* TOC */
+.toc{background:var(--p1);border:1px solid var(--b1);border-radius:6px;padding:1.25rem;margin-bottom:2rem;font-size:.875rem}
+.toc-title{font-family:var(--fm);font-size:.65rem;letter-spacing:2px;color:var(--t2);text-transform:uppercase;margin-bottom:.75rem}
+.toc ol{padding-left:1.25rem;color:var(--cy)}
+.toc li{margin-bottom:.3rem}.toc a{color:var(--cy)}.toc a:hover{color:var(--am)}
+
+/* FOOTER */
+footer{background:var(--p1);border-top:1px solid var(--b1);padding:2.5rem 2rem;margin-top:4rem}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem}
+.footer-col h4{font-family:var(--fm);font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-bottom:.75rem}
+.footer-col a{display:block;font-size:.8rem;color:var(--t2);margin-bottom:.35rem;transition:color .12s}
+.footer-col a:hover{color:var(--cy)}
+.footer-bottom{max-width:1200px;margin:.75rem auto 0;padding-top:.75rem;border-top:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--t2);font-family:var(--fm)}
+@media(max-width:700px){.footer-inner{grid-template-columns:1fr 1fr}.nav-links{display:none}}
+</style>
+<script src="seo.js"></script>
+</head>
+<body data-page="tutorial" data-slug="tutorial-solar-system.html">
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">PHY<em>SIX</em><sub>v5</sub></a>
+    <div class="nav-links"><a href="/physix/">Simulator</a><a href="index.html">Home</a><a href="features.html">Features</a><a href="tutorials.html" class="act">Tutorials</a><a href="discussions.html">Discussions</a><a href="simulations.html">Community</a></div>
+    <a href="/physix/" class="nav-cta">▶ Launch Sim</a>
+  </div>
+</nav>
+
+<div class="hero" style="padding:3rem 2rem 2rem">
+  <div class="hero-inner">
+    <div class="tag">Tutorial · Orbital Mechanics</div>
+    <h1>Build a Solar System<br><span style="color:var(--cy)">From Scratch</span></h1>
+    <p class="lead">Learn Kepler's laws, orbital velocity, and n-body gravity by building your own solar system simulation in PHYSIX — no maths degree required.</p>
+  </div>
+</div>
+
+<div class="page-narrow">
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#kepler">Kepler's laws recap</a></li>
+      <li><a href="#orbit">Putting a planet in orbit</a></li>
+      <li><a href="#nbody">N-body system</a></li>
+      <li><a href="#escape">Escape velocity</a></li>
+      <li><a href="#advanced">Advanced: Slingshot &amp; Lagrange</a></li>
+    </ol>
+  </div>
+
+  <div id="kepler" class="section">
+    <div class="section-label">Theory</div>
+    <h2>Kepler's Three Laws</h2>
+    <p>Johannes Kepler derived three empirical laws of planetary motion from Tycho Brahe's observations. Newton later showed they all follow from the inverse-square gravitational force law.</p>
+    <div class="grid-2">
+      <div class="card card-acc"><h3>Law 1 — Ellipses</h3><p>Planets move in elliptical orbits with the Sun at one focus. Eccentricity e = 0 is a circle, e &lt; 1 is an ellipse, e ≥ 1 is escape.</p></div>
+      <div class="card card-am"><h3>Law 2 — Equal Areas</h3><p>A line joining a planet to the Sun sweeps out equal areas in equal times. This means planets move faster at perihelion and slower at aphelion.</p></div>
+      <div class="card card-gn"><h3>Law 3 — T² ∝ a³</h3><p>The square of the orbital period is proportional to the cube of the semi-major axis. This lets you predict periods from distances.</p></div>
+    </div>
+    <div class="formula">T² = (4π²/GM) · a³<small>Kepler's Third Law. G = 6.674×10⁻¹¹ N·m²/kg². M = central body mass.</small></div>
+  </div>
+
+  <div id="orbit" class="section">
+    <div class="section-label">Step by step</div>
+    <h2>Putting a Planet in Orbit</h2>
+    <div class="steps">
+      <div class="step"><div class="step-body"><h3>Clear &amp; switch to Space mode</h3><p>Click <strong>🗑 CLEAR</strong> then <strong>🌍 Space</strong> in the topbar to enter the astronomical viewport.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Add a Star</h3><p>Drag a <strong>⭐ Star</strong> to the centre of the canvas. Set <code>mass = 2×10³⁰ kg</code> (one solar mass), <code>pinned = true</code>.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Add a Planet</h3><p>Drag a <strong>🪐 Planet</strong> 150 billion metres (1 AU) to the right of the star. Set <code>mass = 6×10²⁴ kg</code> (Earth mass).</p></div></div>
+      <div class="step"><div class="step-body"><h3>Calculate orbital velocity</h3><p>For a circular orbit: v = √(GM/r). With M = 2×10³⁰ and r = 1.5×10¹¹: v ≈ 29,800 m/s. Set <code>Vy = 29800 m/s</code> on the planet.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Apply Newton's gravity</h3><p>From the GRV force tab, drag <strong>Newton's Gravity (1/r²)</strong> onto the planet. Set <code>source = Star</code>, <code>G = 6.674×10⁻¹¹</code>.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Fast-forward &amp; observe</h3><p>Set speed to 10× or 100×. Watch the planet orbit. Enable <strong>Trails</strong> to see the elliptical path. Is it a circle? If not, adjust Vy slightly.</p></div></div>
+    </div>
+    <div class="formula">v_circular = √(GM/r)<small>Speed required for a circular orbit at radius r around mass M.</small></div>
+  </div>
+
+  <div id="nbody" class="section">
+    <div class="section-label">N-body</div>
+    <h2>Adding More Planets</h2>
+    <p>Once you have one planet orbiting, adding more is straightforward — but the interactions between planets create a rich, complex system that is analytically unsolvable for N ≥ 3. PHYSIX uses a 4th-order Runge-Kutta integrator to keep errors small.</p>
+    <div class="callout">
+      <span class="label">Shortcut</span>
+      Load <strong>☀ Full Solar System</strong> from the Presets panel to see all 8 planets with correct masses, distances, and velocities already configured.
+    </div>
+    <p>Try turning off the pinned flag on the Sun. With the Sun free to move, you'll see it wobble due to gravitational tugs from Jupiter — this is how astronomers detect exoplanets using the radial velocity method.</p>
+  </div>
+
+  <div id="escape" class="section">
+    <div class="section-label">Escape velocity</div>
+    <h2>Escaping the Gravitational Well</h2>
+    <div class="formula">v_escape = √(2GM/r)<small>Minimum speed to escape gravity at distance r from mass M. Earth: ~11.2 km/s</small></div>
+    <div class="steps">
+      <div class="step"><div class="step-body"><h3>Set up the experiment</h3><p>Place a planet orbiting your star. Note the orbital speed v_circular at distance r.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Increase velocity</h3><p>Gradually increase the planet's Vy in the properties panel. At v = √2 × v_circular, the orbit changes from ellipse to parabola — the exact escape velocity.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Observe the trajectory</h3><p>Below escape velocity: closed ellipse. At escape: open parabola. Above escape: hyperbola. The trail makes these conic sections visually obvious.</p></div></div>
+    </div>
+  </div>
+
+  <div id="advanced" class="section">
+    <div class="section-label">Advanced</div>
+    <h2>Slingshot Manoeuvres &amp; Lagrange Points</h2>
+    <p>A gravitational slingshot (gravity assist) uses a planet's gravity well to accelerate a spacecraft without burning fuel. Set up Jupiter in a stable orbit, then send a small body on a hyperbolic flyby trajectory — watch its speed increase after the encounter.</p>
+    <p>For Lagrange points: with the Sun and Earth in orbit, place a very small test mass (m ≈ 0 kg) at five specific locations and it will remain roughly stationary. The L4 and L5 points (60° ahead and behind Earth) are where the Trojan asteroids cluster.</p>
+    <div class="callout tip">
+      <span class="label">Related tutorial</span>
+      <a href="tutorial-projectile.html">Projectile Motion tutorial →</a> &nbsp;|&nbsp; <a href="tutorial-pendulum.html">Pendulum & Chaos tutorial →</a>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>SimVerseLab</h4>
+      <a href="index.html">Home</a>
+      <a href="features.html">Features</a>
+      <a href="use-cases.html">Use Cases</a>
+      <a href="/physix/">Launch Simulator</a>
+    </div>
+    <div class="footer-col">
+      <h4>Learn</h4>
+      <a href="tutorial-projectile.html">Projectile Motion Tutorial</a>
+      <a href="tutorial-pendulum.html">Pendulum & Chaos Tutorial</a>
+      <a href="tutorial-solar-system.html">Solar System Tutorial</a>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <a href="compare-phet.html">PHYSIX vs PhET</a>
+      <a href="physics-education.html">Physics Education</a>
+      <a href="stem-lesson-plans.html">STEM Lesson Plans</a>
+      <a href="drag-drop-physics.html">Drag & Drop Physics</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 SimVerseLab — PHYSIX v5</span>
+    <span><a href="https://simverselab.com">simverselab.com</a></span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>404 — Page Not Found · PHYSIX by SimVerseLab</title>
+<meta name="description" content="The page you were looking for doesn't exist. Head back to the PHYSIX physics simulator or browse tutorials and community simulations.">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://simverselab.com/landing.html">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#06080e">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080e;--p1:#0b0d18;--p2:#0f1220;
+  --b1:#1a2138;--b2:#243060;
+  --cy:#22d3ee;--c2:#06b6d4;--am:#f59e0b;--rd:#ef4444;
+  --tx:#94a3b8;--t2:#64748b;--tb:#e2e8f0;
+  --fu:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;--fd:'Bebas Neue',sans-serif;
+}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--fu)}
+a{color:var(--cy);text-decoration:none}a:hover{color:var(--am)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+
+nav{background:rgba(6,8,14,.95);border-bottom:1px solid var(--b1);height:52px;display:flex;align-items:center;padding:0 2rem;gap:1rem}
+.logo{font-family:var(--fd);font-size:24px;letter-spacing:3px;color:var(--cy)}
+.logo em{color:var(--am);font-style:normal}.logo sub{font-size:10px;color:var(--t2);font-family:var(--fm);vertical-align:baseline;letter-spacing:0}
+
+.wrap{min-height:calc(100vh - 52px);display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden}
+.wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(239,68,68,.04),transparent)}
+
+.box{text-align:center;max-width:560px;position:relative;z-index:1}
+
+/* Glitchy 404 number */
+.num{font-family:var(--fd);font-size:clamp(6rem,20vw,11rem);letter-spacing:8px;line-height:1;color:transparent;-webkit-text-stroke:2px var(--rd);position:relative;display:inline-block;margin-bottom:.5rem}
+.num::after{content:'404';position:absolute;inset:0;color:var(--rd);opacity:.12;transform:translate(4px,4px);-webkit-text-stroke:0}
+
+.subtitle{font-family:var(--fd);font-size:clamp(1.2rem,4vw,2rem);letter-spacing:2px;color:var(--tb);margin-bottom:.75rem}
+.desc{font-size:.95rem;color:var(--t2);line-height:1.7;margin-bottom:2rem;max-width:420px;margin-left:auto;margin-right:auto}
+
+/* Search */
+.search-wrap{display:flex;gap:.5rem;margin-bottom:2rem;max-width:400px;margin-left:auto;margin-right:auto}
+.search-input{flex:1;padding:9px 14px;background:var(--p2);border:1px solid var(--b2);border-radius:4px;color:var(--tb);font-family:var(--fm);font-size:.85rem;outline:none;transition:border-color .15s}
+.search-input:focus{border-color:var(--cy)}
+.search-input::placeholder{color:var(--t2)}
+.search-btn{padding:9px 18px;border-radius:4px;background:var(--c2);color:#000;font-family:var(--fm);font-size:.82rem;font-weight:700;border:none;cursor:pointer;letter-spacing:.6px;transition:background .12s;white-space:nowrap}
+.search-btn:hover{background:var(--cy)}
+
+/* Quick links */
+.links{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;max-width:420px;margin:0 auto}
+.qlink{background:var(--p1);border:1px solid var(--b1);border-radius:6px;padding:.9rem 1rem;text-align:left;transition:border-color .15s,transform .12s;display:block}
+.qlink:hover{border-color:var(--b2);transform:translateY(-2px)}
+.qlink-icon{font-size:1.1rem;margin-bottom:.3rem;display:block}
+.qlink-title{font-size:.85rem;font-weight:600;color:var(--tb);display:block;margin-bottom:.15rem}
+.qlink-sub{font-size:.75rem;color:var(--t2)}
+
+/* Floating particles (pure CSS) */
+.particle{position:absolute;border-radius:50%;opacity:.35;animation:float linear infinite;pointer-events:none}
+@keyframes float{0%{transform:translateY(100vh) rotate(0deg);opacity:.35}100%{transform:translateY(-100px) rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="landing.html" class="logo">PHY<em>SIX</em><sub>v5</sub></a>
+</nav>
+
+<div class="wrap" id="wrap">
+  <div class="box">
+    <div class="num">404</div>
+    <div class="subtitle">Simulation Not Found</div>
+    <p class="desc">The page you were looking for doesn't exist or has been moved. Try searching for what you need, or jump straight back into the simulator.</p>
+
+    <div class="search-wrap">
+      <input class="search-input" id="q" type="text" placeholder="Search tutorials, topics…" onkeydown="if(event.key==='Enter')doSearch()">
+      <button class="search-btn" onclick="doSearch()">Search</button>
+    </div>
+
+    <div class="links">
+      <a href="index.html" class="qlink">
+        <span class="qlink-icon">⚡</span>
+        <span class="qlink-title">Launch Simulator</span>
+        <span class="qlink-sub">Open PHYSIX free</span>
+      </a>
+      <a href="tutorials.html" class="qlink">
+        <span class="qlink-icon">📖</span>
+        <span class="qlink-title">Tutorials</span>
+        <span class="qlink-sub">Step-by-step guides</span>
+      </a>
+      <a href="simulations.html" class="qlink">
+        <span class="qlink-icon">🌐</span>
+        <span class="qlink-title">Community</span>
+        <span class="qlink-sub">Browse shared simulations</span>
+      </a>
+      <a href="landing.html" class="qlink">
+        <span class="qlink-icon">🏠</span>
+        <span class="qlink-title">Home</span>
+        <span class="qlink-sub">Back to simverselab.com</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+function doSearch() {
+  const q = document.getElementById('q').value.trim();
+  if (q) window.location.href = 'simulations.html?q=' + encodeURIComponent(q);
+}
+
+// Generate floating particles for atmosphere
+const wrap = document.getElementById('wrap');
+const colors = ['#22d3ee','#f59e0b','#8b5cf6','#ef4444','#22c55e'];
+for (let i = 0; i < 18; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = 3 + Math.random() * 6;
+  p.style.cssText = `
+    width:${size}px;height:${size}px;
+    left:${Math.random()*100}%;
+    background:${colors[Math.floor(Math.random()*colors.length)]};
+    animation-duration:${6+Math.random()*10}s;
+    animation-delay:${-Math.random()*12}s;
+  `;
+  wrap.appendChild(p);
+}
+</script>
+</body>
+</html>

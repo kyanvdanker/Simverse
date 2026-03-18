@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%2306080e'/><text x='50' y='55' font-size='38' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='%2322d3ee'>SIM</text></svg>">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Community Simulations — PHYSIX by SimVerseLab</title>
+<meta name="description" content="Browse hundreds of physics simulations built by the community. Search by topic, filter by tag, and open any simulation directly in PHYSIX.">
+<link rel="canonical" href="https://simverselab.com/simulations.html">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080e;--p1:#0b0d18;--p2:#0f1220;--p3:#141828;
+  --b1:#1a2138;--b2:#243060;--b3:#3a4a7e;
+  --cy:#22d3ee;--c2:#06b6d4;--am:#f59e0b;--a2:#d97706;
+  --gn:#22c55e;--rd:#ef4444;--pu:#8b5cf6;--og:#f97316;
+  --sk:#38bdf8;--tl:#14b8a6;
+  --tx:#94a3b8;--t2:#64748b;--t3:#334155;--tb:#e2e8f0;
+  --fu:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;--fd:'Bebas Neue',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--fu);line-height:1.7;min-height:100vh}
+a{color:var(--cy);text-decoration:none}a:hover{color:var(--am)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(6,8,14,.96);border-bottom:1px solid var(--b1);backdrop-filter:blur(8px)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 1.5rem;height:50px;display:flex;align-items:center;gap:.75rem}
+.logo{font-family:var(--fd);font-size:22px;letter-spacing:3px;color:var(--cy)}
+.logo em{color:var(--am);font-style:normal}.logo sub{font-size:10px;color:var(--t2);font-family:var(--fm);letter-spacing:0;vertical-align:baseline}
+.nav-links{display:flex;gap:.2rem;margin-left:1rem;flex:1}
+.nav-links a{font-size:.68rem;font-weight:600;letter-spacing:.8px;color:var(--t2);padding:4px 8px;border-radius:3px;border:1px solid transparent;text-transform:uppercase;font-family:var(--fm);transition:all .12s}
+.nav-links a:hover,.nav-links a.act{color:var(--cy);border-color:var(--b2);background:var(--p2)}
+.nav-cta{margin-left:auto;padding:5px 14px;border-radius:3px;background:var(--c2);color:#000;font-size:.72rem;font-weight:700;letter-spacing:.8px;font-family:var(--fm);text-transform:uppercase;transition:all .12s;flex-shrink:0}
+.nav-cta:hover{background:var(--cy);color:#000}
+
+/* PAGE LAYOUT */
+.page{max-width:1280px;margin:0 auto;padding:2rem 1.5rem}
+
+/* HERO STRIP */
+.hero-strip{padding:2.5rem 1.5rem 0;max-width:1280px;margin:0 auto}
+.hero-strip h1{font-family:var(--fd);font-size:clamp(1.8rem,4vw,3rem);letter-spacing:2px;color:var(--tb);line-height:1.1}
+.hero-strip h1 span{color:var(--cy)}
+.hero-strip p{color:var(--t2);font-size:.9rem;margin-top:.4rem}
+
+/* SEARCH + FILTER BAR */
+.toolbar{display:flex;gap:.6rem;align-items:center;margin:1.5rem 0 1rem;flex-wrap:wrap}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-wrap input{width:100%;padding:8px 12px 8px 36px;background:var(--p2);border:1px solid var(--b2);border-radius:4px;color:var(--tb);font-family:var(--fm);font-size:.8rem;outline:none;transition:border-color .15s}
+.search-wrap input:focus{border-color:var(--cy)}
+.search-wrap input::placeholder{color:var(--t2)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--t2);font-size:.8rem;pointer-events:none}
+.sort-select{padding:8px 12px;background:var(--p2);border:1px solid var(--b2);border-radius:4px;color:var(--tb);font-family:var(--fm);font-size:.78rem;outline:none;cursor:pointer}
+.sort-select option{background:var(--p2)}
+
+/* TAGS STRIP */
+.tags-strip{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center}
+.tags-label{font-size:.65rem;font-family:var(--fm);letter-spacing:1.5px;color:var(--t2);text-transform:uppercase;margin-right:.2rem}
+.tag-pill{padding:3px 10px;border-radius:99px;border:1px solid var(--b2);background:transparent;color:var(--t2);font-size:.7rem;font-family:var(--fm);cursor:pointer;transition:all .12s;white-space:nowrap}
+.tag-pill:hover{border-color:var(--cy);color:var(--cy)}
+.tag-pill.active{border-color:var(--cy);background:rgba(34,211,238,.1);color:var(--cy)}
+
+/* STATS BAR */
+.stats-bar{display:flex;gap:1.5rem;margin-bottom:1.5rem;font-size:.78rem;font-family:var(--fm);color:var(--t2)}
+.stats-bar strong{color:var(--tb)}
+
+/* SIM GRID */
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+
+/* SIM CARD */
+.sim-card{background:var(--p1);border:1px solid var(--b1);border-radius:8px;display:flex;flex-direction:column;transition:border-color .15s,transform .15s;cursor:pointer;overflow:hidden}
+.sim-card:hover{border-color:var(--b3);transform:translateY(-2px)}
+.sim-card-top{padding:1rem 1.1rem .75rem;flex:1}
+.sim-title{font-size:.95rem;font-weight:600;color:var(--tb);margin-bottom:.3rem;line-height:1.3}
+.sim-desc{font-size:.8rem;color:var(--t2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sim-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.6rem}
+.sim-tag{padding:1px 7px;border-radius:99px;border:1px solid var(--b2);font-size:.65rem;font-family:var(--fm);color:var(--t2)}
+.sim-card-bot{display:flex;align-items:center;gap:.5rem;padding:.6rem 1.1rem;border-top:1px solid var(--b1);font-size:.72rem;font-family:var(--fm);color:var(--t2)}
+.sim-author{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sim-author span{color:var(--cy)}
+.sim-meta{display:flex;gap:.75rem;flex-shrink:0}
+.sim-stat{display:flex;align-items:center;gap:3px}
+.sim-bodies{color:var(--am)}
+.open-btn{padding:4px 12px;border-radius:3px;background:var(--c2);color:#000;font-size:.7rem;font-weight:700;letter-spacing:.6px;font-family:var(--fm);border:none;cursor:pointer;transition:all .12s;text-transform:uppercase}
+.open-btn:hover{background:var(--cy)}
+
+/* EMPTY / LOADING */
+.state-msg{grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--t2);font-family:var(--fm);font-size:.85rem}
+.state-msg .big{font-size:2.5rem;margin-bottom:.75rem}
+.state-msg h3{font-family:var(--fd);font-size:1.4rem;letter-spacing:1.5px;color:var(--tb);margin-bottom:.4rem}
+.spinner{display:inline-block;width:28px;height:28px;border:2px solid var(--b2);border-top-color:var(--cy);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.75rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* PAGINATION */
+.pagination{display:flex;justify-content:center;gap:.5rem;margin-top:2rem;flex-wrap:wrap}
+.pg-btn{padding:6px 14px;border-radius:3px;border:1px solid var(--b2);background:transparent;color:var(--t2);font-size:.78rem;font-family:var(--fm);cursor:pointer;transition:all .12s}
+.pg-btn:hover,.pg-btn.active{border-color:var(--cy);color:var(--cy);background:rgba(34,211,238,.06)}
+.pg-btn:disabled{opacity:.3;cursor:default}
+
+/* DETAIL MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--p1);border:1px solid var(--b2);border-radius:10px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.8)}
+.modal-head{padding:1.25rem 1.5rem 1rem;border-bottom:1px solid var(--b1);display:flex;align-items:flex-start;gap:.75rem}
+.modal-head-txt{flex:1}
+.modal-head h2{font-family:var(--fd);font-size:1.5rem;letter-spacing:1.5px;color:var(--tb);line-height:1.2}
+.modal-head .sub{font-size:.78rem;color:var(--t2);margin-top:.2rem;font-family:var(--fm)}
+.modal-close{width:28px;height:28px;border-radius:3px;border:1px solid var(--b2);background:none;color:var(--t2);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s}
+.modal-close:hover{border-color:var(--rd);color:var(--rd)}
+.modal-body{padding:1.25rem 1.5rem}
+.modal-desc{font-size:.875rem;color:var(--tx);line-height:1.65;margin-bottom:1rem}
+.modal-meta{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;font-size:.78rem;font-family:var(--fm)}
+.meta-item{background:var(--p2);border:1px solid var(--b1);border-radius:4px;padding:.5rem .75rem}
+.meta-item .k{color:var(--t2);display:block;margin-bottom:1px;font-size:.65rem;letter-spacing:1px;text-transform:uppercase}
+.meta-item .v{color:var(--tb)}
+.modal-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.modal-tag{padding:2px 9px;border-radius:99px;border:1px solid var(--b2);font-size:.7rem;font-family:var(--fm);color:var(--cy)}
+.modal-actions{display:flex;gap:.6rem}
+.action-open{flex:1;padding:10px;border-radius:4px;background:var(--c2);color:#000;font-size:.82rem;font-weight:700;letter-spacing:.8px;font-family:var(--fm);border:none;cursor:pointer;text-transform:uppercase;transition:all .12s}
+.action-open:hover{background:var(--cy)}
+.action-like{padding:10px 16px;border-radius:4px;border:1px solid var(--b2);background:none;color:var(--tx);font-size:.82rem;font-family:var(--fm);cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:5px}
+.action-like:hover{border-color:var(--rs);color:var(--rs)}
+.action-like.liked{border-color:var(--rs);color:var(--rs)}
+
+/* FOOTER */
+footer{background:var(--p1);border-top:1px solid var(--b1);padding:2rem 1.5rem;margin-top:3rem;font-size:.78rem;font-family:var(--fm);color:var(--t2);text-align:center}
+footer a{color:var(--t2)}footer a:hover{color:var(--cy)}
+
+@media(max-width:600px){.nav-links{display:none}.sim-grid{grid-template-columns:1fr}}
+</style>
+<script src="seo.js"></script>
+</head>
+<body data-page="simulations" data-slug="simulations.html">
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">PHY<em>SIX</em><sub>v5</sub></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="features.html">Features</a>
+      <a href="tutorials.html">Tutorials</a>
+      <a href="simulations.html" class="act">Community</a>
+    </div>
+    <a href="/physix/" class="nav-cta">▶ Launch Sim</a>
+  </div>
+</nav>
+
+<div class="hero-strip">
+  <h1>Community <span>Simulations</span></h1>
+  <p>Browse experiments built by other PHYSIX users — open any simulation directly in the simulator.</p>
+</div>
+
+<div class="page">
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Search title, author, topic…" autocomplete="off">
+    </div>
+    <select class="sort-select" id="sort-select">
+      <option value="newest">Newest first</option>
+      <option value="popular">Most liked</option>
+      <option value="most_viewed">Most viewed</option>
+    </select>
+  </div>
+
+  <!-- Tags strip -->
+  <div class="tags-strip" id="tags-strip">
+    <span class="tags-label">Tags</span>
+    <button class="tag-pill active" data-tag="">All</button>
+    <!-- populated by JS -->
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar" id="stats-bar">
+    <span>Loading…</span>
+  </div>
+
+  <!-- Grid -->
+  <div class="sim-grid" id="sim-grid">
+    <div class="state-msg">
+      <div class="spinner"></div>
+      <div>Loading simulations…</div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" id="pagination"></div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <div class="modal-head-txt">
+        <h2 id="m-title">—</h2>
+        <div class="sub" id="m-sub">—</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc" id="m-desc">—</p>
+      <div class="modal-meta" id="m-meta"></div>
+      <div class="modal-tags" id="m-tags"></div>
+      <div class="modal-actions">
+        <button class="action-open" id="m-open-btn">▶ Open in Simulator</button>
+        <button class="action-like" id="m-like-btn">♥ <span id="m-likes">0</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html">SimVerseLab</a> · <a href="/physix/">Launch Simulator</a> · <a href="features.html">Features</a>
+  <br><br>© 2025 SimVerseLab — PHYSIX v5
+</footer>
+
+<script>
+const LIMIT  = 24;
+let state = {
+  q:      '',
+  tag:    '',
+  sort:   'newest',
+  offset: 0,
+  total:  0,
+};
+let currentSim = null;
+const likedIds = new Set(JSON.parse(localStorage.getItem('physix_liked') || '[]'));
+
+// ── Fetch & render ────────────────────────────────────────
+async function fetchSims() {
+  const grid = document.getElementById('sim-grid');
+  grid.innerHTML = '<div class="state-msg"><div class="spinner"></div><div>Loading…</div></div>';
+
+  const params = new URLSearchParams({
+    limit:  LIMIT,
+    offset: state.offset,
+    sort:   state.sort,
+  });
+  if (state.q)   params.set('q',   state.q);
+  if (state.tag) params.set('tag', state.tag);
+
+  try {
+    const r = await fetch(`/api/simulations?${params}`);
+    if (!r.ok) throw new Error('Server error');
+    const data = await r.json();
+    state.total = data.total;
+    renderGrid(data.sims);
+    renderPagination();
+    document.getElementById('stats-bar').innerHTML =
+      `<span><strong>${data.total.toLocaleString()}</strong> simulation${data.total !== 1 ? 's' : ''}</span>` +
+      (state.q ? `<span>matching <strong>"${esc(state.q)}"</strong></span>` : '') +
+      (state.tag ? `<span>tagged <strong>#${esc(state.tag)}</strong></span>` : '');
+  } catch(e) {
+    grid.innerHTML = `<div class="state-msg"><div class="big">⚠</div><h3>Could not load</h3><p>${esc(e.message)}</p></div>`;
+  }
+}
+
+function renderGrid(sims) {
+  const grid = document.getElementById('sim-grid');
+  if (!sims.length) {
+    grid.innerHTML = `<div class="state-msg"><div class="big">🔭</div><h3>No simulations found</h3>
+      <p>Try a different search or <a href="/physix/">build one yourself</a>.</p></div>`;
+    return;
+  }
+  grid.innerHTML = sims.map(s => `
+    <div class="sim-card" onclick="openModal('${s.id}')">
+      <div class="sim-card-top">
+        <div class="sim-title">${esc(s.title)}</div>
+        <div class="sim-desc">${esc(s.description) || '<span style="color:var(--t3)">No description</span>'}</div>
+        ${s.tags.length ? `<div class="sim-tags">${s.tags.map(t=>`<span class="sim-tag">#${esc(t)}</span>`).join('')}</div>` : ''}
+      </div>
+      <div class="sim-card-bot">
+        <div class="sim-author">by <span>${esc(s.author)}</span></div>
+        <div class="sim-meta">
+          <span class="sim-stat sim-bodies">⬡ ${s.bodyCount}</span>
+          <span class="sim-stat">♥ ${s.likes}</span>
+          <span class="sim-stat">👁 ${s.views}</span>
+        </div>
+        <button class="open-btn" onclick="event.stopPropagation();openInSim('${s.id}')">Open</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPagination() {
+  const pages   = Math.ceil(state.total / LIMIT);
+  const current = Math.floor(state.offset / LIMIT);
+  const pg      = document.getElementById('pagination');
+  if (pages <= 1) { pg.innerHTML = ''; return; }
+  let html = `<button class="pg-btn" ${current===0?'disabled':''} onclick="goPage(${current-1})">← Prev</button>`;
+  const start = Math.max(0, current - 2);
+  const end   = Math.min(pages - 1, current + 2);
+  for (let i = start; i <= end; i++) {
+    html += `<button class="pg-btn ${i===current?'active':''}" onclick="goPage(${i})">${i+1}</button>`;
+  }
+  html += `<button class="pg-btn" ${current===pages-1?'disabled':''} onclick="goPage(${current+1})">Next →</button>`;
+  pg.innerHTML = html;
+}
+
+function goPage(n) {
+  state.offset = n * LIMIT;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  fetchSims();
+}
+
+// ── Tags ─────────────────────────────────────────────────
+async function loadTags() {
+  try {
+    const r = await fetch('/api/simulations/tags/all');
+    const data = await r.json();
+    const strip = document.getElementById('tags-strip');
+    // Keep the "All" pill, add the rest
+    const existing = strip.querySelector('[data-tag=""]');
+    data.tags.slice(0, 20).forEach(({ tag, count }) => {
+      const btn = document.createElement('button');
+      btn.className = 'tag-pill';
+      btn.dataset.tag = tag;
+      btn.textContent = `#${tag} ${count}`;
+      btn.onclick = () => selectTag(tag, btn);
+      strip.appendChild(btn);
+    });
+    existing.onclick = () => selectTag('', existing);
+  } catch(e) {}
+}
+
+function selectTag(tag, btn) {
+  document.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  state.tag    = tag;
+  state.offset = 0;
+  fetchSims();
+}
+
+// ── Modal ─────────────────────────────────────────────────
+async function openModal(id) {
+  try {
+    const r = await fetch(`/api/simulations/${id}`);
+    if (!r.ok) return;
+    const sim = await r.json();
+    currentSim = sim;
+
+    document.getElementById('m-title').textContent = sim.title;
+    document.getElementById('m-sub').textContent   = `by ${sim.author} · ${new Date(sim.ts).toLocaleDateString()}`;
+    document.getElementById('m-desc').textContent  = sim.description || 'No description provided.';
+
+    document.getElementById('m-meta').innerHTML = `
+      <div class="meta-item"><span class="k">Objects</span><span class="v">${sim.bodyCount} bod${sim.bodyCount===1?'y':'ies'}${sim.surfCount?' + '+sim.surfCount+' surface'+(sim.surfCount===1?'':'s'):''}</span></div>
+      <div class="meta-item"><span class="k">Views</span><span class="v">${sim.views.toLocaleString()}</span></div>
+      <div class="meta-item"><span class="k">Likes</span><span class="v">${sim.likes.toLocaleString()}</span></div>
+      <div class="meta-item"><span class="k">Created</span><span class="v">${new Date(sim.ts).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}</span></div>
+    `;
+
+    document.getElementById('m-tags').innerHTML = sim.tags.length
+      ? sim.tags.map(t=>`<span class="modal-tag">#${esc(t)}</span>`).join('')
+      : '<span style="font-size:.75rem;color:var(--t2);font-family:var(--fm)">No tags</span>';
+
+    const likeBtn = document.getElementById('m-like-btn');
+    const liked   = likedIds.has(id);
+    likeBtn.className = 'action-like' + (liked ? ' liked' : '');
+    document.getElementById('m-likes').textContent = sim.likes;
+    likeBtn.onclick = () => likeSim(id);
+
+    document.getElementById('m-open-btn').onclick = () => openInSim(id);
+    document.getElementById('modal-overlay').classList.add('open');
+  } catch(e) {}
+}
+
+function closeModal(event) {
+  if (event && event.target !== document.getElementById('modal-overlay')) return;
+  document.getElementById('modal-overlay').classList.remove('open');
+  currentSim = null;
+}
+
+async function likeSim(id) {
+  if (likedIds.has(id)) return;
+  try {
+    const r = await fetch(`/api/simulations/${id}/like`, { method: 'POST' });
+    if (r.status === 409) return; // already liked
+    const data = await r.json();
+    likedIds.add(id);
+    localStorage.setItem('physix_liked', JSON.stringify([...likedIds]));
+    document.getElementById('m-likes').textContent = data.likes;
+    document.getElementById('m-like-btn').classList.add('liked');
+  } catch(e) {}
+}
+
+function openInSim(id) {
+  window.location.href = `/physix/?sim=${id}`;
+}
+
+// ── Search & sort controls ────────────────────────────────
+let searchTimer;
+document.getElementById('search-input').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    state.q = e.target.value.trim();
+    state.offset = 0;
+    fetchSims();
+  }, 350);
+});
+
+document.getElementById('sort-select').addEventListener('change', e => {
+  state.sort   = e.target.value;
+  state.offset = 0;
+  fetchSims();
+});
+
+// ── ESC to close modal ────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('modal-overlay').classList.remove('open');
+});
+
+// ── Escape HTML ───────────────────────────────────────────
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Pre-fill search from URL param ───────────────────────
+const urlQ = new URLSearchParams(location.search).get('q');
+if (urlQ) {
+  state.q = urlQ;
+  document.getElementById('search-input').value = urlQ;
+}
+
+// ── Init ──────────────────────────────────────────────────
+loadTags();
+fetchSims();
+</script>
+</body>
+</html>

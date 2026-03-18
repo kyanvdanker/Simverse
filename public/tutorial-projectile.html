@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%2306080e'/><text x='50' y='55' font-size='38' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='%2322d3ee'>SIM</text></svg>">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>How to Simulate Projectile Motion — Step-by-Step Tutorial — PHYSIX by SimVerseLab</title>
+<meta name="description" content="Learn to simulate projectile motion in PHYSIX. Adjust launch angle, velocity, and drag to see how kinematic equations play out in a live physics sandbox.">
+<meta name="keywords" content="physics simulator, drag drop physics, STEM education, SimVerseLab, PHYSIX">
+<meta property="og:title" content="How to Simulate Projectile Motion — Step-by-Step Tutorial — PHYSIX">
+<meta property="og:description" content="Learn to simulate projectile motion in PHYSIX. Adjust launch angle, velocity, and drag to see how kinematic equations play out in a live physics sandbox.">
+<meta property="og:url" content="https://simverselab.com/tutorial-projectile.html">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://simverselab.com/tutorial-projectile.html">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06080e;--p1:#0b0d18;--p2:#0f1220;--p3:#141828;
+  --b1:#1a2138;--b2:#243060;--b3:#3a4a7e;
+  --cy:#22d3ee;--c2:#06b6d4;--am:#f59e0b;--a2:#d97706;
+  --gn:#22c55e;--rd:#ef4444;--pu:#8b5cf6;--og:#f97316;
+  --sk:#38bdf8;--tl:#14b8a6;--rs:#f43f5e;--lm:#84cc16;
+  --tx:#94a3b8;--t2:#64748b;--t3:#334155;--tb:#e2e8f0;
+  --fu:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;--fd:'Bebas Neue',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--fu);line-height:1.7;min-height:100vh}
+a{color:var(--cy);text-decoration:none}a:hover{color:var(--am)}
+h1,h2,h3{font-family:var(--fd);letter-spacing:2px;color:var(--tb);line-height:1.2}
+h1{font-size:clamp(2.2rem,5vw,3.8rem)}
+h2{font-size:clamp(1.5rem,3vw,2.4rem)}
+h3{font-size:1.2rem;letter-spacing:1.5px}
+p{margin-bottom:1rem;font-size:1rem}
+code,pre{font-family:var(--fm)}
+pre{background:var(--p2);border:1px solid var(--b2);border-radius:6px;padding:1rem;overflow-x:auto;font-size:.85rem;color:var(--tb);margin-bottom:1rem}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(6,8,14,.95);border-bottom:1px solid var(--b1);backdrop-filter:blur(8px)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:52px;display:flex;align-items:center;gap:1rem}
+.logo{font-family:var(--fd);font-size:24px;letter-spacing:3px;color:var(--cy);flex-shrink:0}
+.logo em{color:var(--am);font-style:normal}.logo sub{font-size:10px;color:var(--t2);font-family:var(--fm);letter-spacing:0;vertical-align:baseline}
+.nav-links{display:flex;gap:.25rem;flex-wrap:wrap;align-items:center;margin-left:1.5rem;flex:1}
+.nav-links a{font-size:.7rem;font-weight:600;letter-spacing:.8px;color:var(--t2);padding:4px 8px;border-radius:3px;border:1px solid transparent;text-transform:uppercase;font-family:var(--fm);transition:all .12s}
+.nav-links a:hover,.nav-links a.act{color:var(--cy);border-color:var(--b2);background:var(--p2)}
+.nav-cta{margin-left:auto;padding:6px 16px;border-radius:3px;background:var(--c2);color:#000;font-size:.75rem;font-weight:700;letter-spacing:.8px;font-family:var(--fm);border:none;cursor:pointer;text-transform:uppercase;transition:all .12s;flex-shrink:0;text-decoration:none}
+.nav-cta:hover{background:var(--cy);color:#000}
+
+/* LAYOUT */
+.page{max-width:1200px;margin:0 auto;padding:3rem 2rem}
+.page-narrow{max-width:820px;margin:0 auto;padding:3rem 2rem}
+
+/* HERO */
+.hero{padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-inner{max-width:900px;margin:0 auto;position:relative;z-index:1}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(34,211,238,.07),transparent)}
+.tag{display:inline-block;padding:4px 12px;border-radius:2px;border:1px solid var(--b2);background:var(--p2);font-size:.7rem;font-family:var(--fm);letter-spacing:1.5px;color:var(--cy);margin-bottom:1.2rem;text-transform:uppercase}
+.hero h1{margin-bottom:1.2rem}
+.hero p.lead{font-size:1.1rem;color:var(--tx);max-width:640px;margin:0 auto 2rem}
+.btn-row{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.btn-pri{padding:10px 28px;border-radius:4px;background:var(--c2);color:#000;font-size:.85rem;font-weight:700;letter-spacing:.8px;font-family:var(--fm);border:none;cursor:pointer;text-transform:uppercase;transition:all .12s;text-decoration:none;display:inline-block}
+.btn-pri:hover{background:var(--cy);color:#000}
+.btn-sec{padding:10px 28px;border-radius:4px;background:transparent;color:var(--cy);font-size:.85rem;font-weight:700;letter-spacing:.8px;font-family:var(--fm);border:1px solid var(--b2);cursor:pointer;text-transform:uppercase;transition:all .12s;text-decoration:none;display:inline-block}
+.btn-sec:hover{border-color:var(--cy);background:rgba(34,211,238,.06);color:var(--cy)}
+
+/* SECTION PATTERNS */
+.section{padding:3rem 0;border-top:1px solid var(--b1)}
+.section-label{font-size:.7rem;font-family:var(--fm);letter-spacing:2.5px;color:var(--cy);text-transform:uppercase;margin-bottom:.5rem}
+.section h2{margin-bottom:.75rem}
+.section .sub{font-size:1rem;color:var(--t2);margin-bottom:2rem;max-width:600px}
+
+/* GRID CARDS */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.card{background:var(--p1);border:1px solid var(--b1);border-radius:6px;padding:1.25rem 1.5rem;transition:border-color .15s}
+.card:hover{border-color:var(--b2)}
+.card-icon{font-size:1.4rem;margin-bottom:.6rem}
+.card h3{color:var(--tb);margin-bottom:.4rem;font-size:1rem;letter-spacing:1px}
+.card p{font-size:.875rem;color:var(--t2);margin:0}
+.card-acc{border-left:3px solid var(--cy)}
+.card-am{border-left:3px solid var(--am)}
+.card-gn{border-left:3px solid var(--gn)}
+.card-pu{border-left:3px solid var(--pu)}
+
+/* STEPS */
+.steps{counter-reset:step;display:flex;flex-direction:column;gap:1.5rem}
+.step{display:flex;gap:1.25rem;align-items:flex-start}
+.step::before{counter-increment:step;content:counter(step,'decimal-leading-zero');font-family:var(--fm);font-size:.75rem;font-weight:700;color:var(--cy);background:var(--p2);border:1px solid var(--b2);border-radius:3px;padding:4px 8px;flex-shrink:0;margin-top:2px;letter-spacing:1px}
+.step-body h3{color:var(--tb);font-family:var(--fu);font-size:.95rem;font-weight:600;margin-bottom:.3rem;letter-spacing:0}
+.step-body p{font-size:.875rem;color:var(--t2);margin:0}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.875rem}
+th{text-align:left;padding:8px 12px;background:var(--p2);color:var(--tb);font-family:var(--fm);font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;border-bottom:2px solid var(--b2)}
+td{padding:10px 12px;border-bottom:1px solid var(--b1);color:var(--tx)}
+tr:hover td{background:var(--p1)}
+td.win{color:var(--gn)}td.lose{color:var(--t2)}td.mid{color:var(--am)}
+
+/* CALLOUT */
+.callout{background:var(--p2);border:1px solid var(--b2);border-left:3px solid var(--cy);border-radius:4px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.9rem}
+.callout.warn{border-left-color:var(--am)}.callout.tip{border-left-color:var(--gn)}
+.callout strong{color:var(--tb)}
+.callout .label{font-size:.65rem;font-family:var(--fm);letter-spacing:1.5px;text-transform:uppercase;color:var(--cy);display:block;margin-bottom:.3rem}
+.callout.warn .label{color:var(--am)}.callout.tip .label{color:var(--gn)}
+
+/* FORMULA */
+.formula{background:var(--p2);border:1px solid var(--b2);border-radius:4px;padding:.75rem 1.25rem;margin:1rem 0;font-family:var(--fm);font-size:1rem;color:var(--cy);text-align:center;letter-spacing:.5px}
+.formula small{color:var(--t2);font-size:.75rem;display:block;margin-top:.25rem}
+
+/* BADGE */
+.badge{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-family:var(--fm);font-weight:700;letter-spacing:1px;margin-left:4px;text-transform:uppercase}
+.badge-cy{background:rgba(34,211,238,.12);color:var(--cy);border:1px solid rgba(34,211,238,.3)}
+.badge-am{background:rgba(245,158,11,.12);color:var(--am);border:1px solid rgba(245,158,11,.3)}
+.badge-gn{background:rgba(34,197,94,.12);color:var(--gn);border:1px solid rgba(34,197,94,.3)}
+.badge-rd{background:rgba(239,68,68,.12);color:var(--rd);border:1px solid rgba(239,68,68,.3)}
+
+/* TOC */
+.toc{background:var(--p1);border:1px solid var(--b1);border-radius:6px;padding:1.25rem;margin-bottom:2rem;font-size:.875rem}
+.toc-title{font-family:var(--fm);font-size:.65rem;letter-spacing:2px;color:var(--t2);text-transform:uppercase;margin-bottom:.75rem}
+.toc ol{padding-left:1.25rem;color:var(--cy)}
+.toc li{margin-bottom:.3rem}.toc a{color:var(--cy)}.toc a:hover{color:var(--am)}
+
+/* FOOTER */
+footer{background:var(--p1);border-top:1px solid var(--b1);padding:2.5rem 2rem;margin-top:4rem}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem}
+.footer-col h4{font-family:var(--fm);font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-bottom:.75rem}
+.footer-col a{display:block;font-size:.8rem;color:var(--t2);margin-bottom:.35rem;transition:color .12s}
+.footer-col a:hover{color:var(--cy)}
+.footer-bottom{max-width:1200px;margin:.75rem auto 0;padding-top:.75rem;border-top:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--t2);font-family:var(--fm)}
+@media(max-width:700px){.footer-inner{grid-template-columns:1fr 1fr}.nav-links{display:none}}
+</style>
+<script src="seo.js"></script>
+</head>
+<body data-page="tutorial" data-slug="tutorial-projectile.html">
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">PHY<em>SIX</em><sub>v5</sub></a>
+    <div class="nav-links"><a href="/physix/">Simulator</a><a href="index.html">Home</a><a href="features.html">Features</a><a href="tutorials.html" class="act">Tutorials</a><a href="discussions.html">Discussions</a><a href="simulations.html">Community</a></div>
+    <a href="/physix/" class="nav-cta">▶ Launch Sim</a>
+  </div>
+</nav>
+
+<div class="hero" style="padding:3rem 2rem 2rem">
+  <div class="hero-inner">
+    <div class="tag">Tutorial · Projectile Motion</div>
+    <h1>Simulate Projectile<br><span style="color:var(--cy)">Motion</span></h1>
+    <p class="lead">Build a projectile experiment from scratch, verify the range formula, and see how air drag changes the landing point — all in your browser.</p>
+  </div>
+</div>
+
+<div class="page-narrow">
+
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#theory">The physics behind it</a></li>
+      <li><a href="#quickstart">Quickstart with the preset</a></li>
+      <li><a href="#build">Build it from scratch</a></li>
+      <li><a href="#experiments">Experiments to try</a></li>
+      <li><a href="#formulas">Key formulas</a></li>
+    </ol>
+  </div>
+
+  <div id="theory" class="section">
+    <div class="section-label">Theory</div>
+    <h2>The Physics Behind Projectile Motion</h2>
+    <p>A projectile is any body in flight under the influence of gravity alone (or gravity + drag). The horizontal and vertical components of motion are independent of each other — this is the key insight that makes the maths tractable.</p>
+    <div class="formula">x(t) = v₀cos(θ)·t &nbsp;&nbsp; y(t) = v₀sin(θ)·t − ½gt²<small>Kinematic equations for a projectile launched at angle θ with speed v₀</small></div>
+    <p>The range (horizontal distance at landing) is maximised when θ = 45°. With no drag, the range formula is:</p>
+    <div class="formula">R = v₀² · sin(2θ) / g<small>Maximum range at θ=45°: R = v₀²/g (BINAS: kinematica)</small></div>
+    <div class="callout warn">
+      <span class="label">Real world</span>
+      The ideal parabola only holds in a vacuum. At high speeds, air drag dramatically shortens the range and shifts the optimal angle below 45°. PHYSIX models this with a configurable drag coefficient Cd.
+    </div>
+  </div>
+
+  <div id="quickstart" class="section">
+    <div class="section-label">Quickstart</div>
+    <h2>Load the Built-in Preset</h2>
+    <div class="steps">
+      <div class="step"><div class="step-body"><h3>Open PHYSIX</h3><p>Go to <a href="/physix/">simverselab.com//physix/</a> and wait for the simulator to load.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Find the Presets panel</h3><p>In the left panel, scroll down to the <strong>Projectiles</strong> group and click <strong>🎯 Projectile 45°</strong>.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Press Play</h3><p>Click the cyan <strong>▶ PLAY</strong> button in the top bar. The projectile launches at 45° with v₀ = 30 m/s and a drag coefficient of Cd = 0.47.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Read the range</h3><p>When the ball lands, use the <strong>📏 Ruler</strong> tool (top bar) to measure the horizontal distance. Compare it to the formula: R = 30²/9.8 ≈ 91.8 m in vacuum.</p></div></div>
+    </div>
+  </div>
+
+  <div id="build" class="section">
+    <div class="section-label">From scratch</div>
+    <h2>Build the Experiment Yourself</h2>
+    <div class="steps">
+      <div class="step"><div class="step-body"><h3>Clear the canvas</h3><p>Click <strong>🗑 CLEAR</strong> in the topbar to remove the solar system preset and start with a blank canvas.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Add a Ground Plane</h3><p>Drag the <strong>▬ Ground Plane</strong> tile from the Objects panel onto the canvas. It snaps to y = 0 by default.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Add a Sphere</h3><p>Drag a <strong>🔵 Sphere</strong> onto the canvas. In the right-hand Properties panel, set: <code>mass = 0.5 kg</code>, <code>radius = 0.12 m</code>, <code>x = −35 m</code>, <code>y = 1.2 m</code>.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Set initial velocity</h3><p>In the Properties panel, set <code>Vx = 21.2 m/s</code> and <code>Vy = 21.2 m/s</code>. This gives v₀ = 30 m/s at exactly 45°.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Apply gravity</h3><p>In the Forces panel (left panel, GRV tab), drag the <strong>Uniform g</strong> force tile onto your sphere. Leave gx = 0, gy = −9.80665 m/s².</p></div></div>
+      <div class="step"><div class="step-body"><h3>Apply drag (optional)</h3><p>From the FLD tab, drag <strong>Surface Drag</strong> onto the sphere. Set Cd = 0.47 (a sphere), autoA = true. This enables realistic air resistance.</p></div></div>
+      <div class="step"><div class="step-body"><h3>Press Play &amp; compare</h3><p>Hit <strong>▶ PLAY</strong>. Try toggling drag on/off (click the force chip in the right panel) and compare the landing positions.</p></div></div>
+    </div>
+  </div>
+
+  <div id="experiments" class="section">
+    <div class="section-label">Experiments</div>
+    <h2>Things to Try</h2>
+    <div class="grid-2">
+      <div class="card card-acc">
+        <h3>Angle sweep</h3>
+        <p>Reset the simulation and try launch angles of 15°, 30°, 45°, 60°, and 75°. Plot range vs. angle. You should see a symmetric curve peaking at 45° — in vacuum. Does drag shift the peak?</p>
+      </div>
+      <div class="card card-am">
+        <h3>Moon vs Earth</h3>
+        <p>Change the gravity force to gy = −1.62 m/s² (Moon). Launch at 45° with the same speed. How much further does the ball travel? Does the formula still hold?</p>
+      </div>
+      <div class="card card-gn">
+        <h3>Heavy vs light ball</h3>
+        <p>Duplicate the sphere (right-click → Duplicate). Change one to 0.01 kg and one to 100 kg. Launch both. With drag enabled, which lands first? Why?</p>
+      </div>
+      <div class="card">
+        <h3>Real baseball pitch</h3>
+        <p>Set v₀ = 40 m/s (90 mph), Cd = 0.40, m = 0.145 kg (regulation ball). From x = 0, y = 1 m, what angle do you need to cross a 0.5 m high plate at x = 18.4 m?</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="formulas" class="section">
+    <div class="section-label">Reference</div>
+    <h2>Key Formulas</h2>
+    <div class="formula">Vx = v₀·cos(θ) &nbsp;&nbsp; Vy = v₀·sin(θ) − g·t<small>Velocity components at time t</small></div>
+    <div class="formula">Range R = v₀²·sin(2θ) / g<small>Range in vacuum. Angle for max range: θ = 45°</small></div>
+    <div class="formula">F_drag = ½·ρ·Cd·A·v²<small>Aerodynamic drag. ρ = 1.225 kg/m³ at sea level (ISA)</small></div>
+    <div class="callout tip">
+      <span class="label">Next tutorial</span>
+      Ready for more? Try the <a href="tutorial-pendulum.html">Pendulum &amp; Chaos tutorial</a> to explore simple harmonic motion and chaos theory in the same simulator.
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>SimVerseLab</h4>
+      <a href="index.html">Home</a>
+      <a href="features.html">Features</a>
+      <a href="use-cases.html">Use Cases</a>
+      <a href="/physix/">Launch Simulator</a>
+    </div>
+    <div class="footer-col">
+      <h4>Learn</h4>
+      <a href="tutorial-projectile.html">Projectile Motion Tutorial</a>
+      <a href="tutorial-pendulum.html">Pendulum & Chaos Tutorial</a>
+      <a href="tutorial-solar-system.html">Solar System Tutorial</a>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <a href="compare-phet.html">PHYSIX vs PhET</a>
+      <a href="physics-education.html">Physics Education</a>
+      <a href="stem-lesson-plans.html">STEM Lesson Plans</a>
+      <a href="drag-drop-physics.html">Drag & Drop Physics</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 SimVerseLab — PHYSIX v5</span>
+    <span><a href="https://simverselab.com">simverselab.com</a></span>
+  </div>
+</footer>
+</body>
+</html>

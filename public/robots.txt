@@ -1,0 +1,14 @@
+# robots.txt — simverselab.com
+# https://www.robotstxt.org/robotstxt.html
+
+User-agent: *
+Allow: /
+
+# Block admin panel from all crawlers
+Disallow: /simverse-admin-2025
+Disallow: /api/
+
+# Block data directory
+Disallow: /data/
+
+Sitemap: https://simverselab.com/sitemap.xml
